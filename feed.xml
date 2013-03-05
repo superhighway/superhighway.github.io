@@ -5,10 +5,30 @@
   <id>http://blog.url.com/</id>
   <link href="http://blog.url.com/"/>
   <link href="http://blog.url.com/feed.xml" rel="self"/>
-  <updated>2013-01-30T00:00:00Z</updated>
+  <updated>2013-03-05T00:00:00Z</updated>
   <author>
     <name>Blog Author</name>
   </author>
+  <entry>
+    <title>Middleman or Jekyll?</title>
+    <link rel="alternate" href="/2013/03/05/middleman-or-jekyll.html"/>
+    <id>/2013/03/05/middleman-or-jekyll.html</id>
+    <published>2013-03-05T00:00:00Z</published>
+    <updated>2013-03-05T00:00:00Z</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <summary type="html">&lt;p&gt;I have used &lt;a href='https://github.com/mojombo/jekyll'&gt;Jekyll&lt;/a&gt; with &lt;a href='https://github.com/imathis/octopress'&gt;Octopress&lt;/a&gt; before. When I saw Middleman, I immediately fell in love and left Jekyll.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href='https://github.com/mojombo/jekyll'&gt;Jekyll&lt;/a&gt; has awesomely organized folder stucture and has lots of plugins. You can host Jekyll site as it is in GitHub, without any deploy script. It has a few themes you can pick, especially if you use Octopress. However, I like Jekyll better when the documentation has short getting started guide. It took me a while just to make things work initially. I have ever stuck just because I didn&amp;#8217;t install Python source code in my computer (I needed syntax highlighting). Also, when I first started using Jekyll, I had to read a lot of information from the documentation or Googling just because of a random problem (either related to syntax highlighting or Liquid).&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;I have used &lt;a href='https://github.com/mojombo/jekyll'&gt;Jekyll&lt;/a&gt; with &lt;a href='https://github.com/imathis/octopress'&gt;Octopress&lt;/a&gt; before. When I saw Middleman, I immediately fell in love and left Jekyll.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href='https://github.com/mojombo/jekyll'&gt;Jekyll&lt;/a&gt; has awesomely organized folder stucture and has lots of plugins. You can host Jekyll site as it is in GitHub, without any deploy script. It has a few themes you can pick, especially if you use Octopress. However, I like Jekyll better when the documentation has short getting started guide. It took me a while just to make things work initially. I have ever stuck just because I didn&amp;#8217;t install Python source code in my computer (I needed syntax highlighting). Also, when I first started using Jekyll, I had to read a lot of information from the documentation or Googling just because of a random problem (either related to syntax highlighting or Liquid).&lt;/p&gt;
+
+&lt;p&gt;&lt;a href='http://middlemanapp.com/'&gt;Middleman&lt;/a&gt; is amazingly lightweight and front-end friendly. The initially generated template is so simple that it works immediately, and anyone can customize it quickly. It comes with &lt;a href='http://middlemanapp.com/asset-pipeline/'&gt;asset pipeline&lt;/a&gt; by default, so it is just a few configs and a command line away to &lt;a href='(http://middlemanapp.com/advanced/file-size-optimization/'&gt;minify assets, compress image&lt;/a&gt;, and even &lt;a href='http://middlemanapp.com/minify-html/'&gt;minify HTML&lt;/a&gt;. The documentation is pretty short as well. Unfortunately, Middleman doesn&amp;#8217;t have as many plugins as Jekyll. There is no deploy script available by default, and GitHub does not support hosting site organized with Middleman as it is. So, if you want to deploy Middleman-generated site, you need &lt;a href='https://github.com/tvaughan/middleman-deploy'&gt;middleman-deploy&lt;/a&gt;. Also, unfortunately, Middleman&amp;#8217;s folder structure can be more disorganized than Jekyll.&lt;/p&gt;
+
+&lt;p&gt;Both &lt;a href='https://github.com/mojombo/jekyll'&gt;Jekyll&lt;/a&gt; and &lt;a href='http://middlemanapp.com/'&gt;Middleman&lt;/a&gt; are really really cool. You should try both and pick what you like.&lt;/p&gt;</content>
+  </entry>
   <entry>
     <title>Learning Design</title>
     <link rel="alternate" href="/2013/01/30/learning-design.html"/>
