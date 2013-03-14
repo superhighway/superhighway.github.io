@@ -28,7 +28,7 @@
 &lt;ol&gt;
 &lt;li&gt;More images can mean lower PageSpeed score, especially if the images are not optimized. So, if your site has images, be sure that they are optimized.&lt;/li&gt;
 
-&lt;li&gt;&lt;a href='http://fltdsgn.com/'&gt;Flat design&lt;/a&gt; uses color combination, and very few texture background, gradients, and images so much. This can lead to high score. Of course, number 1 above has to be fulfilled.&lt;/li&gt;
+&lt;li&gt;&lt;a href='http://fltdsgn.com/'&gt;Flat design&lt;/a&gt; uses color combination, but very few texture background, gradients, and other kinds of images. This can lead to high score. Of course, if images are used, number 1 above has to be fulfilled.&lt;/li&gt;
 
 &lt;li&gt;Although you use CDN for your Javascript or CSS, the score will be a lot lower if they&amp;#8217;re not gzipped.&lt;br /&gt;I had 200kb scripts hosted on somebody else&amp;#8217;s CDN. Then, I gzipped it and hosted those on GitHub. The final size became 20-30kb, but I thought DNS lookup could be a lot slower. Anyway, just by gzipping those scripts, Google PageSpeed gave my site score higher by 30.&lt;/li&gt;
 
