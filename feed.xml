@@ -5,10 +5,38 @@
   <id>http://blog.url.com/</id>
   <link href="http://blog.url.com/"/>
   <link href="http://blog.url.com/feed.xml" rel="self"/>
-  <updated>2013-03-05T00:00:00Z</updated>
+  <updated>2013-03-14T00:00:00Z</updated>
   <author>
     <name>Blog Author</name>
   </author>
+  <entry>
+    <title>Playing with PageSpeed</title>
+    <link rel="alternate" href="/2013/03/14/playing-with-pagespeed.html"/>
+    <id>/2013/03/14/playing-with-pagespeed.html</id>
+    <published>2013-03-14T00:00:00Z</published>
+    <updated>2013-03-14T00:00:00Z</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <summary type="html">&lt;p&gt;How is design related to &lt;a href='https://developers.google.com/speed/pagespeed/'&gt;PageSpeed score&lt;/a&gt;? After playing around with &lt;a href='/about.html'&gt;a bunch of side projects I built&lt;/a&gt;, I discovered these 4 things.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;More images can mean lower PageSpeed score, especially if the images are not optimized. So, if your site has images, be sure that they are optimized.&lt;/li&gt;
+&lt;/ol&gt;</summary>
+    <content type="html">&lt;p&gt;How is design related to &lt;a href='https://developers.google.com/speed/pagespeed/'&gt;PageSpeed score&lt;/a&gt;? After playing around with &lt;a href='/about.html'&gt;a bunch of side projects I built&lt;/a&gt;, I discovered these 4 things.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;More images can mean lower PageSpeed score, especially if the images are not optimized. So, if your site has images, be sure that they are optimized.&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://fltdsgn.com/'&gt;Flat design&lt;/a&gt; uses color combination, and very few texture background, gradients, and images so much. This can lead to high score. Of course, number 1 above has to be fulfilled.&lt;/li&gt;
+
+&lt;li&gt;Although you use CDN for your Javascript or CSS, the score will be a lot lower if they&amp;#8217;re not gzipped.&lt;br /&gt;I had 200kb scripts hosted on somebody else&amp;#8217;s CDN. Then, I gzipped it and hosted those on GitHub. The final size became 20-30kb, but I thought DNS lookup could be a lot slower. Anyway, just by gzipping those scripts, Google PageSpeed gave my site score higher by 30.&lt;/li&gt;
+
+&lt;li&gt;Look at &amp;#8220;Critical Path Explorer&amp;#8221; to check how and how long your site assets are downloaded. Though your score is so-so, maybe your site is actually quite decent.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;No wonder Gmail page design looks so clean, and it is very performant as well.&lt;/p&gt;</content>
+  </entry>
   <entry>
     <title>Middleman or Jekyll?</title>
     <link rel="alternate" href="/2013/03/05/middleman-or-jekyll.html"/>
