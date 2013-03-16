@@ -5,10 +5,89 @@
   <id>http://blog.url.com/</id>
   <link href="http://blog.url.com/"/>
   <link href="http://blog.url.com/feed.xml" rel="self"/>
-  <updated>2013-03-14T00:00:00Z</updated>
+  <updated>2013-03-15T00:00:00Z</updated>
   <author>
     <name>Blog Author</name>
   </author>
+  <entry>
+    <title>Extending Sets in Redis</title>
+    <link rel="alternate" href="/2013/03/15/extending-sets-in-redis.html"/>
+    <id>/2013/03/15/extending-sets-in-redis.html</id>
+    <published>2013-03-15T00:00:00Z</published>
+    <updated>2013-03-15T00:00:00Z</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <summary type="html">&lt;p&gt;I seem to encounter some patterns where I need to have Hash data structure in Redis. I need to their values as a list or a set.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;# ruby&lt;/span&gt;
+&lt;span class="nb"&gt;hash&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="ss"&gt;cheez&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;burger&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="ss"&gt;hello&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="no"&gt;Set&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;yay&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Hash in Redis does not support the above structure by default. However, by using Set and another data structure, we can simulate it.&lt;/p&gt;
+</summary>
+    <content type="html">&lt;p&gt;I seem to encounter some patterns where I need to have Hash data structure in Redis. I need to their values as a list or a set.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;# ruby&lt;/span&gt;
+&lt;span class="nb"&gt;hash&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="ss"&gt;cheez&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;burger&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="ss"&gt;hello&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="no"&gt;Set&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;yay&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Hash in Redis does not support the above structure by default. However, by using Set and another data structure, we can simulate it.&lt;/p&gt;
+
+&lt;h2&gt;First Approach&lt;/h2&gt;
+
+&lt;p&gt;First, we are going to implement naive approach like below.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;HSET&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;cheez&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;burger&lt;/span&gt;&amp;quot;
+&lt;span class="n"&gt;HSET&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hello&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;world&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;yay&lt;/span&gt;&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Alright, those can solve our problem here but... we need hack for the above structure to work. &lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s look at &lt;code&gt;cheez&lt;/code&gt;. Imagine we will have array of values of &lt;code&gt;&amp;quot;cheez&amp;quot;&lt;/code&gt;, then we need long comma-separated values for that. Ok, maybe we can use JSON, but again, it&amp;#39;s another hack just to parse the stored JSON. And those are not including some concurrency issues that might appear someday...&lt;/p&gt;
+
+&lt;p&gt;Now, let&amp;#39;s check &lt;code&gt;hello&lt;/code&gt;. It has the same problems with &lt;code&gt;cheez&lt;/code&gt;, but with an addition. Anytime we need to add a new value, we need to make sure the added value does not exist in existing list.&lt;/p&gt;
+
+&lt;h2&gt;An Extensible Approach Using Sets&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;#39;s go back to definition of Hash in Ruby. Hash contains arbitrary key and value pairs, and the keys are unique. In other words, we can represent Hash keys in Ruby as one Set in Redis.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;SADD&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;cheez&lt;/span&gt;&amp;quot;
+&lt;span class="n"&gt;SADD&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hello&lt;/span&gt;&amp;quot;
+
+&lt;span class="n"&gt;RPUSH&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;cheez&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;burger&lt;/span&gt;&amp;quot;
+&lt;span class="n"&gt;SADD&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;hello&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;world&lt;/span&gt;&amp;quot;
+&lt;span class="n"&gt;SADD&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;hello&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;yay&lt;/span&gt;&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;So, what we did was storing Hash keys in Redis set, then we store the values using another Redis data structure. Not so bad, eh?&lt;/p&gt;
+
+&lt;p&gt;This approach looks complete. Though, sometimes we do need to care a bit about concurrent access and modification, especially when later on you want to change or delete the &lt;code&gt;hash&lt;/code&gt; often.&lt;/p&gt;
+
+&lt;h2&gt;Ensuring Atomic Operation&lt;/h2&gt;
+
+&lt;p&gt;This step is not necessary if your app does not need the above stuff as atomic operation.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s step back a bit. This is what we want.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;# ruby&lt;/span&gt;
+&lt;span class="nb"&gt;hash&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="ss"&gt;cheez&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;burger&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="ss"&gt;hello&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="no"&gt;Set&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;yay&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Anytime you set key-value pair to hash, you want it to be (as if) one batch of operation. To make multiple commands work as one unit, use multi/exec.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;MULTI&lt;/span&gt;
+&lt;span class="n"&gt;SADD&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;cheez&lt;/span&gt;&amp;quot;
+&lt;span class="n"&gt;LADD&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;cheez&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;burger&lt;/span&gt;&amp;quot;
+&lt;span class="n"&gt;EXEC&lt;/span&gt;
+
+&lt;span class="n"&gt;MULTI&lt;/span&gt;
+&lt;span class="n"&gt;SADD&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hello&lt;/span&gt;&amp;quot;
+&lt;span class="n"&gt;SADD&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;hello&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;world&lt;/span&gt;&amp;quot;
+&lt;span class="n"&gt;SADD&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;hello&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;yay&lt;/span&gt;&amp;quot;
+&lt;span class="n"&gt;EXEC&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;There is another term called pipelining, which is similar to multi/exec. &lt;a href="https://groups.google.com/forum/?fromgroups=#!topic/redis-db/zVXsg0bjrbg"&gt;Pipelining is for batch of Redis commands, multi/exec is good for atomicity&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>Playing with PageSpeed</title>
     <link rel="alternate" href="/2013/03/14/playing-with-pagespeed.html"/>
@@ -18,24 +97,23 @@
     <author>
       <name>Article Author</name>
     </author>
-    <summary type="html">&lt;p&gt;How is design related to &lt;a href='https://developers.google.com/speed/pagespeed/'&gt;PageSpeed score&lt;/a&gt;? After playing around with &lt;a href='/about.html'&gt;a bunch of side projects I built&lt;/a&gt;, I discovered these 4 things.&lt;/p&gt;
+    <summary type="html">&lt;p&gt;How is design related to &lt;a href="https://developers.google.com/speed/pagespeed/"&gt;PageSpeed score&lt;/a&gt;? After playing around with &lt;a href="/about.html"&gt;a bunch of side projects I built&lt;/a&gt;, I discovered these 4 things.&lt;/p&gt;
 
 &lt;ol&gt;
 &lt;li&gt;More images can mean lower PageSpeed score, especially if the images are not optimized. So, if your site has images, be sure that they are optimized.&lt;/li&gt;
-&lt;/ol&gt;</summary>
-    <content type="html">&lt;p&gt;How is design related to &lt;a href='https://developers.google.com/speed/pagespeed/'&gt;PageSpeed score&lt;/a&gt;? After playing around with &lt;a href='/about.html'&gt;a bunch of side projects I built&lt;/a&gt;, I discovered these 4 things.&lt;/p&gt;
+&lt;/ol&gt;
+</summary>
+    <content type="html">&lt;p&gt;How is design related to &lt;a href="https://developers.google.com/speed/pagespeed/"&gt;PageSpeed score&lt;/a&gt;? After playing around with &lt;a href="/about.html"&gt;a bunch of side projects I built&lt;/a&gt;, I discovered these 4 things.&lt;/p&gt;
 
 &lt;ol&gt;
 &lt;li&gt;More images can mean lower PageSpeed score, especially if the images are not optimized. So, if your site has images, be sure that they are optimized.&lt;/li&gt;
-
-&lt;li&gt;&lt;a href='http://fltdsgn.com/'&gt;Flat design&lt;/a&gt; uses color combination, but very few texture background, gradients, and other kinds of images. This can lead to high score. Of course, if images are used, number 1 above has to be fulfilled.&lt;/li&gt;
-
-&lt;li&gt;Although you use CDN for your Javascript or CSS, the score will be a lot lower if they&amp;#8217;re not gzipped.&lt;br /&gt;I had 200kb scripts hosted on somebody else&amp;#8217;s CDN. Then, I gzipped it and hosted those on GitHub. The final size became 20-30kb, but I thought DNS lookup could be a lot slower. Anyway, just by gzipping those scripts, Google PageSpeed gave my site score higher by 30.&lt;/li&gt;
-
-&lt;li&gt;Look at &amp;#8220;Critical Path Explorer&amp;#8221; to check how and how long your site assets are downloaded. Though your score is so-so, maybe your site is actually quite decent.&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://fltdsgn.com/"&gt;Flat design&lt;/a&gt; uses color combination, but very few texture background, gradients, and other kinds of images. This can lead to high score. Of course, if images are used, number 1 above has to be fulfilled.&lt;/li&gt;
+&lt;li&gt;Although you use CDN for your Javascript or CSS, the score will be a lot lower if they&amp;#39;re not gzipped.&lt;br/&gt;I had 200kb scripts hosted on somebody else&amp;#39;s CDN. Then, I gzipped it and hosted those on GitHub. The final size became 20-30kb, but I thought DNS lookup could be a lot slower. Anyway, just by gzipping those scripts, Google PageSpeed gave my site score higher by 30.&lt;/li&gt;
+&lt;li&gt;Look at &amp;quot;Critical Path Explorer&amp;quot; to check how and how long your site assets are downloaded. Though your score is so-so, maybe your site is actually quite decent.&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;No wonder Gmail page design looks so clean, and it is very performant as well.&lt;/p&gt;</content>
+&lt;p&gt;No wonder Gmail page design looks so clean, and it is very performant as well.&lt;/p&gt;
+</content>
   </entry>
   <entry>
     <title>Middleman or Jekyll?</title>
@@ -46,16 +124,18 @@
     <author>
       <name>Article Author</name>
     </author>
-    <summary type="html">&lt;p&gt;I have used &lt;a href='https://github.com/mojombo/jekyll'&gt;Jekyll&lt;/a&gt; with &lt;a href='https://github.com/imathis/octopress'&gt;Octopress&lt;/a&gt; before. When I saw &lt;a href='http://middlemanapp.com/'&gt;Middleman&lt;/a&gt;, I immediately fell in love and left Jekyll.&lt;/p&gt;
+    <summary type="html">&lt;p&gt;I have used &lt;a href="https://github.com/mojombo/jekyll"&gt;Jekyll&lt;/a&gt; with &lt;a href="https://github.com/imathis/octopress"&gt;Octopress&lt;/a&gt; before. When I saw &lt;a href="http://middlemanapp.com/"&gt;Middleman&lt;/a&gt;, I immediately fell in love and left Jekyll.&lt;/p&gt;
 
-&lt;p&gt;&lt;a href='https://github.com/mojombo/jekyll'&gt;Jekyll&lt;/a&gt; has awesomely organized folder stucture and has lots of plugins. You can host Jekyll site as it is in GitHub, without any deploy script. It has a few themes you can pick, especially if you use Octopress. However, I like Jekyll better when the documentation has short getting started guide. It took me a while just to make things work initially. I have ever stuck just because I didn&amp;#8217;t install Python source code in my computer (I needed syntax highlighting). Also, when I first started using Jekyll, I had to read a lot of information from the documentation or Googling just because of a random problem (either related to syntax highlighting or Liquid).&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;I have used &lt;a href='https://github.com/mojombo/jekyll'&gt;Jekyll&lt;/a&gt; with &lt;a href='https://github.com/imathis/octopress'&gt;Octopress&lt;/a&gt; before. When I saw &lt;a href='http://middlemanapp.com/'&gt;Middleman&lt;/a&gt;, I immediately fell in love and left Jekyll.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/mojombo/jekyll"&gt;Jekyll&lt;/a&gt; has awesomely organized folder stucture and has lots of plugins. You can host Jekyll site as it is in GitHub, without any deploy script. It has a few themes you can pick, especially if you use Octopress. However, I like Jekyll better when the documentation has short getting started guide. It took me a while just to make things work initially. I have ever stuck just because I didn&amp;#39;t install Python source code in my computer (I needed syntax highlighting). Also, when I first started using Jekyll, I had to read a lot of information from the documentation or Googling just because of a random problem (either related to syntax highlighting or Liquid).&lt;/p&gt;
+</summary>
+    <content type="html">&lt;p&gt;I have used &lt;a href="https://github.com/mojombo/jekyll"&gt;Jekyll&lt;/a&gt; with &lt;a href="https://github.com/imathis/octopress"&gt;Octopress&lt;/a&gt; before. When I saw &lt;a href="http://middlemanapp.com/"&gt;Middleman&lt;/a&gt;, I immediately fell in love and left Jekyll.&lt;/p&gt;
 
-&lt;p&gt;&lt;a href='https://github.com/mojombo/jekyll'&gt;Jekyll&lt;/a&gt; has awesomely organized folder stucture and has lots of plugins. You can host Jekyll site as it is in GitHub, without any deploy script. It has a few themes you can pick, especially if you use Octopress. However, I like Jekyll better when the documentation has short getting started guide. It took me a while just to make things work initially. I have ever stuck just because I didn&amp;#8217;t install Python source code in my computer (I needed syntax highlighting). Also, when I first started using Jekyll, I had to read a lot of information from the documentation or Googling just because of a random problem (either related to syntax highlighting or Liquid).&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/mojombo/jekyll"&gt;Jekyll&lt;/a&gt; has awesomely organized folder stucture and has lots of plugins. You can host Jekyll site as it is in GitHub, without any deploy script. It has a few themes you can pick, especially if you use Octopress. However, I like Jekyll better when the documentation has short getting started guide. It took me a while just to make things work initially. I have ever stuck just because I didn&amp;#39;t install Python source code in my computer (I needed syntax highlighting). Also, when I first started using Jekyll, I had to read a lot of information from the documentation or Googling just because of a random problem (either related to syntax highlighting or Liquid).&lt;/p&gt;
 
-&lt;p&gt;&lt;a href='http://middlemanapp.com/'&gt;Middleman&lt;/a&gt; is amazingly lightweight and front-end friendly. The initially generated template is so simple that it works immediately, and anyone can customize it quickly. It comes with &lt;a href='http://middlemanapp.com/asset-pipeline/'&gt;asset pipeline&lt;/a&gt; by default, so it is just a few configs and a command line away to &lt;a href='http://middlemanapp.com/advanced/file-size-optimization/'&gt;minify assets, compress image&lt;/a&gt;, and even &lt;a href='http://middlemanapp.com/minify-html/'&gt;minify HTML&lt;/a&gt;. The documentation is pretty short as well. Unfortunately, Middleman doesn&amp;#8217;t have as many plugins as Jekyll. There is no deploy script available by default, and GitHub does not support hosting site organized with Middleman as it is. So, if you want to deploy Middleman-generated site, you need &lt;a href='https://github.com/tvaughan/middleman-deploy'&gt;middleman-deploy&lt;/a&gt;. Also, unfortunately, Middleman&amp;#8217;s folder structure can be more disorganized than Jekyll.&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://middlemanapp.com/"&gt;Middleman&lt;/a&gt; is amazingly lightweight and front-end friendly. The initially generated template is so simple that it works immediately, and anyone can customize it quickly. It comes with &lt;a href="http://middlemanapp.com/asset-pipeline/"&gt;asset pipeline&lt;/a&gt; by default, so it is just a few configs and a command line away to &lt;a href="http://middlemanapp.com/advanced/file-size-optimization/"&gt;minify assets, compress image&lt;/a&gt;, and even &lt;a href="http://middlemanapp.com/minify-html/"&gt;minify HTML&lt;/a&gt;. The documentation is pretty short as well. Unfortunately, Middleman doesn&amp;#39;t have as many plugins as Jekyll. There is no deploy script available by default, and GitHub does not support hosting site organized with Middleman as it is. So, if you want to deploy Middleman-generated site, you need &lt;a href="https://github.com/tvaughan/middleman-deploy"&gt;middleman-deploy&lt;/a&gt;. Also, unfortunately, Middleman&amp;#39;s folder structure can be more disorganized than Jekyll.&lt;/p&gt;
 
-&lt;p&gt;Both &lt;a href='https://github.com/mojombo/jekyll'&gt;Jekyll&lt;/a&gt; and &lt;a href='http://middlemanapp.com/'&gt;Middleman&lt;/a&gt; are really really cool. You should try both and pick what you like.&lt;/p&gt;</content>
+&lt;p&gt;Both &lt;a href="https://github.com/mojombo/jekyll"&gt;Jekyll&lt;/a&gt; and &lt;a href="http://middlemanapp.com/"&gt;Middleman&lt;/a&gt; are really really cool. You should try both and pick what you like.&lt;/p&gt;
+</content>
   </entry>
   <entry>
     <title>Learning Design</title>
@@ -66,22 +146,29 @@
     <author>
       <name>Article Author</name>
     </author>
-    <summary type="html">&lt;p&gt;For the past two years, I have been dealing with implementing designs for iOS apps or web apps. I sometimes wonder how designers or front end developers can create cool-looking buttons, or create good-looking responsive websites.&lt;/p&gt;
+    <summary type="html">&lt;p&gt;For the past two years, I have been dealing with implementing designs for iOS apps or web apps.
+I sometimes wonder how designers or front end developers can create cool-looking buttons, or create
+good-looking responsive websites.&lt;/p&gt;
 
-&lt;p&gt;I found these two small-but-concise books are really really great answers to my questions.&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;For the past two years, I have been dealing with implementing designs for iOS apps or web apps. I sometimes wonder how designers or front end developers can create cool-looking buttons, or create good-looking responsive websites.&lt;/p&gt;
+&lt;p&gt;I found these two small-but-concise books are really really great answers to my questions.&lt;/p&gt;
+</summary>
+    <content type="html">&lt;p&gt;For the past two years, I have been dealing with implementing designs for iOS apps or web apps.
+I sometimes wonder how designers or front end developers can create cool-looking buttons, or create
+good-looking responsive websites.&lt;/p&gt;
 
-&lt;p&gt;I found these two small-but-concise books are really really great answers to my questions. I don&amp;#8217;t usually finish books, but for me, it took half a week to finish these.&lt;/p&gt;
+&lt;p&gt;I found these two small-but-concise books are really really great answers to my questions.
+I don&amp;#39;t usually finish books, but for me, it took half a week to finish these.&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href='http://nathanbarry.com/webapps/'&gt;Designing Web Applications&lt;/a&gt; by &lt;a href='http://nathanbarry.com'&gt;Nathan Barry&lt;/a&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;a href='http://www.abookapart.com/products/responsive-web-design'&gt;Responsive Web Design&lt;/a&gt; by &lt;a href='http://ethanmarcotte.com/'&gt;Ethan Marcotte&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://nathanbarry.com/webapps/"&gt;Designing Web Applications&lt;/a&gt; by &lt;a href="http://nathanbarry.com"&gt;Nathan Barry&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.abookapart.com/products/responsive-web-design"&gt;Responsive Web Design&lt;/a&gt; by &lt;a href="http://ethanmarcotte.com/"&gt;Ethan Marcotte&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;There are other related books that I still plan to grasp, like &lt;a href='http://www.abookapart.com/products/complete-library'&gt;A Book Apart Full Bundle&lt;/a&gt; and &lt;a href='https://peepcode.com/products/design-bundle'&gt;PeepCode&amp;#8217;s Design Bundle&lt;/a&gt;. Also, I have been trying to understand &lt;a href='http://www.smashingmagazine.com/2010/01/28/color-theory-for-designers-part-1-the-meaning-of-color/'&gt;color theory&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;There are other related books that I still plan to grasp, like &lt;a href="http://www.abookapart.com/products/complete-library"&gt;A Book Apart Full Bundle&lt;/a&gt; and &lt;a href="https://peepcode.com/products/design-bundle"&gt;PeepCode&amp;#39;s Design Bundle&lt;/a&gt;.
+Also, I have been trying to understand &lt;a href="http://www.smashingmagazine.com/2010/01/28/color-theory-for-designers-part-1-the-meaning-of-color/"&gt;color theory&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;I don&amp;#8217;t think I have &amp;#8216;good eyes&amp;#8217;, but I&amp;#8217;ll keep trying to find how much understanding I&amp;#8217;ll be happy with.&lt;/p&gt;</content>
+&lt;p&gt;I don&amp;#39;t think I have &amp;#39;good eyes&amp;#39;, but I&amp;#39;ll keep trying to find how much understanding I&amp;#39;ll be happy with.&lt;/p&gt;
+</content>
   </entry>
   <entry>
     <title>Activities on Spare Time</title>
@@ -92,81 +179,77 @@
     <author>
       <name>Article Author</name>
     </author>
-    <summary type="html">&lt;p&gt;When the time comes, daily routines like working or going to school drain lots of energy. It&amp;#8217;s important to spare some time to do things that will refresh your energy, so that you keep your daily routine performance somewhat balanced.&lt;/p&gt;
+    <summary type="html">&lt;p&gt;When the time comes, daily routines like working or going to school drain lots of energy.
+It&amp;#39;s important to spare some time to do things that will refresh your energy, so that you keep
+your daily routine performance somewhat balanced.&lt;/p&gt;
 
-&lt;p&gt;I find at least there are 6 ways to replenish energy.&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;When the time comes, daily routines like working or going to school drain lots of energy. It&amp;#8217;s important to spare some time to do things that will refresh your energy, so that you keep your daily routine performance somewhat balanced.&lt;/p&gt;
+&lt;p&gt;I find at least there are 6 ways to replenish energy.&lt;/p&gt;
+</summary>
+    <content type="html">&lt;p&gt;When the time comes, daily routines like working or going to school drain lots of energy.
+It&amp;#39;s important to spare some time to do things that will refresh your energy, so that you keep
+your daily routine performance somewhat balanced.&lt;/p&gt;
 
 &lt;p&gt;I find at least there are 6 ways to replenish energy.&lt;/p&gt;
 
-&lt;h2 id='do_new_things'&gt;Do New Things&lt;/h2&gt;
+&lt;h2&gt;Do New Things&lt;/h2&gt;
 
-&lt;p&gt;Doing new things can be one of the easiest to do. It could be one-off activity that does not require much commitment. Here are some examples.&lt;/p&gt;
+&lt;p&gt;Doing new things can be one of the easiest to do. It could be one-off activity that
+does not require much commitment. Here are some examples.&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Travel to unknown place&lt;/li&gt;
-
 &lt;li&gt;Learn new programming language&lt;/li&gt;
-
 &lt;li&gt;Learn new language&lt;/li&gt;
-
 &lt;li&gt;Learn new facts&lt;/li&gt;
-
 &lt;li&gt;Talk to strangers&lt;/li&gt;
-
 &lt;li&gt;Play around with public dataset&lt;/li&gt;
-
 &lt;li&gt;Read new books&lt;/li&gt;
-
-&lt;li&gt;Watch concert of a band that you&amp;#8217;ve never heard of&lt;/li&gt;
+&lt;li&gt;Watch concert of a band that you&amp;#39;ve never heard of&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;One caveat is that you need to be slightly adventurous, or at least have some curiosity.&lt;/p&gt;
 
-&lt;h2 id='get_in_touch_with_familiar_people_or_things'&gt;Get in Touch with Familiar People or Things&lt;/h2&gt;
+&lt;h2&gt;Get in Touch with Familiar People or Things&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Meet your relatives&lt;/li&gt;
-
 &lt;li&gt;Attend school reunions&lt;/li&gt;
-
 &lt;li&gt;Watch concert of a band that you like&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id='go_for_work_out'&gt;Go for Work out&lt;/h2&gt;
+&lt;h2&gt;Go for Work out&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Long walk&lt;/li&gt;
-
 &lt;li&gt;Swim&lt;/li&gt;
-
 &lt;li&gt;Take stairs&lt;/li&gt;
-
 &lt;li&gt;Run&lt;/li&gt;
-
 &lt;li&gt;Cycle&lt;/li&gt;
-
 &lt;li&gt;Yoga&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id='have_a_regular_hobby'&gt;Have a Regular Hobby&lt;/h2&gt;
+&lt;h2&gt;Have a Regular Hobby&lt;/h2&gt;
 
 &lt;p&gt;The following activities might not be straightforward because they need regular commitment.&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Play instruments&lt;/li&gt;
-
 &lt;li&gt;Paint&lt;/li&gt;
-
 &lt;li&gt;Do public speaking&lt;/li&gt;
-
 &lt;li&gt;Cook&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id='sleep'&gt;Sleep&lt;/h2&gt;
+&lt;h2&gt;Sleep&lt;/h2&gt;
 
-&lt;p&gt;When you try all the above and none work, you can try to have a nap. Sometimes just sleeping a bit will get you refreshed.&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;It&amp;#8217;s easy to say all the above, isn&amp;#8217;t it? Well, the actual execution requires lots of motivation. For me, I am trying to have more of playing instruments and reading books. I&amp;#8217;d love to have working out as part of my spare time activity, and I&amp;#8217;m still looking for ways to make it work.&lt;/p&gt;</content>
+&lt;p&gt;When you try all the above and none work, you can try to have a nap.
+Sometimes just sleeping a bit will get you refreshed.&lt;/p&gt;
+
+&lt;hr/&gt;
+
+&lt;p&gt;It&amp;#39;s easy to say all the above, isn&amp;#39;t it? Well, the actual execution requires lots of motivation.
+For me, I am trying to have more of playing instruments
+and reading books. I&amp;#39;d love to have working out as part of my spare time activity, and I&amp;#39;m still
+looking for ways to make it work.&lt;/p&gt;
+</content>
   </entry>
 </feed>
