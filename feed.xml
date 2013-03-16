@@ -18,7 +18,7 @@
     <author>
       <name>Article Author</name>
     </author>
-    <summary type="html">&lt;p&gt;I seem to encounter some patterns where I need to have Hash data structure in Redis. I need to their values as a list or a set.&lt;/p&gt;
+    <summary type="html">&lt;p&gt;I seem to encounter some patterns where I need to have Hash data structure in Redis. I sometimes need their values as a list or a set.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;# ruby&lt;/span&gt;
 &lt;span class="nb"&gt;hash&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="ss"&gt;cheez&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;burger&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
@@ -27,7 +27,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Hash in Redis does not support the above structure by default. However, by using Set and another data structure, we can simulate it.&lt;/p&gt;
 </summary>
-    <content type="html">&lt;p&gt;I seem to encounter some patterns where I need to have Hash data structure in Redis. I need to their values as a list or a set.&lt;/p&gt;
+    <content type="html">&lt;p&gt;I seem to encounter some patterns where I need to have Hash data structure in Redis. I sometimes need their values as a list or a set.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;# ruby&lt;/span&gt;
 &lt;span class="nb"&gt;hash&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="ss"&gt;cheez&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;burger&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
