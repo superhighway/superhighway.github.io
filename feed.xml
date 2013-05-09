@@ -5,10 +5,102 @@
   <id>http://blog.url.com/</id>
   <link href="http://blog.url.com/"/>
   <link href="http://blog.url.com/feed.xml" rel="self"/>
-  <updated>2013-03-15T00:00:00Z</updated>
+  <updated>2013-05-09T00:00:00Z</updated>
   <author>
     <name>Blog Author</name>
   </author>
+  <entry>
+    <title>My Stages of Studying Web Design</title>
+    <link rel="alternate" href="/2013/05/09/my-stages-of-studying-web-design.html"/>
+    <id>/2013/05/09/my-stages-of-studying-web-design.html</id>
+    <published>2013-05-09T00:00:00Z</published>
+    <updated>2013-05-09T00:00:00Z</updated>
+    <author>
+      <name>Article Author</name>
+    </author>
+    <summary type="html">&lt;p&gt;This was all started with my desire to &lt;a href="2013-01-30-learning-design.html"&gt;learn design for web/mobile apps&lt;/a&gt; and understand color theory, like color schemes, color meanings, etc. It turned out that I had hard time to remember and apply the theory for the context of making websites. Still, my wonder of how web designers can put together colors and textures gorgeously did not stop. Because of that, I have been trying out colors, textures, spacing, and other things like those for &lt;a href="about.html"&gt;a couple of sites&lt;/a&gt;.&lt;/p&gt;
+</summary>
+    <content type="html">&lt;p&gt;This was all started with my desire to &lt;a href="2013-01-30-learning-design.html"&gt;learn design for web/mobile apps&lt;/a&gt; and understand color theory, like color schemes, color meanings, etc. It turned out that I had hard time to remember and apply the theory for the context of making websites. Still, my wonder of how web designers can put together colors and textures gorgeously did not stop. Because of that, I have been trying out colors, textures, spacing, and other things like those for &lt;a href="about.html"&gt;a couple of sites&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I found out I needed a starting point like everyone else, so that I could continue digging a little bit more. &lt;strong&gt;These were stages of how I dived a bit into designing websites.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2&gt;Plain Page and Gray Colors&lt;/h2&gt;
+
+&lt;p&gt;I really love gray! I have gray t-shirts, hoodies... I am not going to talk so much about that.&lt;/p&gt;
+
+&lt;p&gt;For me, the easiest starting point to pick color was to use monochrome color scheme. I started with gray combinations, trying to remember simple color hex codes like &lt;code&gt;#333&lt;/code&gt;, &lt;code&gt;#888&lt;/code&gt;, etc. I found that was the fastest way I could build prototype of web pages.&lt;/p&gt;
+
+&lt;p&gt;I was inspired by Ryan Singer&amp;#39;s &lt;a href="https://peepcode.com/products/ryan-singer-ux"&gt;UX Sketching&lt;/a&gt; and &lt;a href="https://peepcode.com/products/ryan-singer-ii"&gt;UI Prototyping&lt;/a&gt; screencasts. In those videos, he used lots of grays for UI Prototyping.&lt;/p&gt;
+
+&lt;h2&gt;A Bit of Shadow and Gradients&lt;/h2&gt;
+
+&lt;p&gt;It was hard for me to make site exciting with just gray and monochrome scheme. I was stuck on that stage quite a while until I read &lt;a href="http://nathanbarry.com/webapps/"&gt;Nathan Barry&amp;#39;s book&lt;/a&gt; and watched his video. He demonstrated how to make buttons or texts look embossed or recessed by adding 1px shadow.&lt;/p&gt;
+
+&lt;p&gt;With the previous stage plus playing around with gray/white/black gradients... things were starting to get exciting!&lt;/p&gt;
+
+&lt;h2&gt;Grays with One, Two Saturated Colors. Hello, Blue!&lt;/h2&gt;
+
+&lt;p&gt;Somebody has ever told me that gray color generally does not excite. So, maybe, if I used simple color together with grays, I could make interesting sites.&lt;/p&gt;
+
+&lt;p&gt;I really love how Nathan Barry used blue on &lt;a href="http://nathanbarry.com/webapps/"&gt;his book and video tutorials&lt;/a&gt;. So, I tried to remember &lt;code&gt;#000022&lt;/code&gt;, &lt;code&gt;#000088&lt;/code&gt;, etc. Maybe, apply colors just for header text.&lt;/p&gt;
+
+&lt;p&gt;I tried using &lt;a href="http://colorschemedesigner.com/"&gt;Color Scheme Designer&lt;/a&gt; to pick colors. I was not quite happy because I need to use Internet for this.&lt;/p&gt;
+
+&lt;p&gt;Photos can be source of good color pallete too. No one will sue you if you&amp;#39;re taking color from your own photo (like this site&amp;#39;s font colors).&lt;/p&gt;
+
+&lt;h2&gt;Buttons, &lt;a href="http://codepen.io/"&gt;CodePen&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;I subscribed to Mighty Deals, bought stuff from UIParade... Wow, those stuff made me really happy. And I got happier when I tried to steal them and put in &lt;a href="http://codepen.io/nmutiara"&gt;my CodePen&lt;/a&gt;. It was really fun. But of course, ain&amp;#39;t got no time fo&amp;#39; stealin&amp;#39; everythin&amp;#39;.&lt;/p&gt;
+
+&lt;h2&gt;Subtle Animations&lt;/h2&gt;
+
+&lt;p&gt;Yep, fading is the easiest. What else? Rotate, glow... That was all I could think of. When I run out of inspirations, I take a look at bunch of video clips on YouTube and try to steal some slick animations. Anyway I didn&amp;#39;t really do much of animations but the subtle ones were pretty important.&lt;/p&gt;
+
+&lt;p&gt;Interestingly, I found animations work the same as in iOS too..although in iOS, things are really verbose.&lt;/p&gt;
+
+&lt;h2&gt;Regular Fonts, Spacing, Rhythm&lt;/h2&gt;
+
+&lt;p&gt;I would say this was the time I started to learn typography. The learning process is still ongoing. I think spacing is fundamental, and I still have trouble getting this right. Until I get this, I won&amp;#39;t touch custom fonts pairing. I do not think I have talent in sense of space, rhythm, and whatever else the design terms are.&lt;/p&gt;
+
+&lt;p&gt;So, how do I deal with this? I picked existing stylesheets I like. I picked Github stylesheets and saw line-height is 1.6. Ok, maybe line-height is supposedly more than 1. That was my guess. How about headings? I still guess and experiment a lot right now...&lt;/p&gt;
+
+&lt;h2&gt;Exciting Background Images&lt;/h2&gt;
+
+&lt;p&gt;Bored with using solid colors on backgrounds? Try using patterns. I did. It might work. There are free and gorgeous stuff like in &lt;a href="http://subtlepatterns.com/"&gt;Subtle Patterns&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img title="Subtle Patterns" alt="Subtle Patterns" src="/images/subtle-patterns.png?1368117498" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Another choice is to use &lt;a href="http://www.noisetexturegenerator.com/"&gt;Noise Texture Generator&lt;/a&gt; for really small image size. This is useful for replacing your solid color to be slightly different.&lt;/p&gt;
+
+&lt;p&gt;&lt;img title="Noise Texture Generator" alt="Noise Texture Generator" src="/images/noise-texture-generator.png?1368117498" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Blurred background photos are another option, but I find they are too big and can make web pages slow.&lt;/p&gt;
+
+&lt;h2&gt;Buying Colorful Clothes. Taking Pictures of Ads.&lt;/h2&gt;
+
+&lt;p&gt;You&amp;#39;re gonna laugh on this one. There are lots of art forms out there that you can &amp;#39;steal&amp;#39;. I really mean it, you can &amp;#39;steal&amp;#39; them. &amp;#39;Steal&amp;#39; whatever you love, because I heard great artists steal. Of course, not literally steal. Just steal a bit of the idea but not obviously copy the whole thing.&lt;/p&gt;
+
+&lt;p&gt;This site has colors that I like. Apparently, they are not necessarily gray!&lt;/p&gt;
+
+&lt;p&gt;There are other inspirations other than clothes. You can also look at ads. How amazing an ad could pick two opposite color in one go.&lt;/p&gt;
+
+&lt;h2&gt;Boosting Page Load Time with &lt;a href="https://developers.google.com/speed/pagespeed/"&gt;Google PageSpeed&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Most of the things above are on website, so of course, web pages are accessed through the Internet. If my web pages takes 10s to load (or maybe render), most people will leave with bad impression. Well, most people leave anyway.. but at least we can leave with hopefully better impressions.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://developers.google.com/speed/pagespeed/"&gt;Google PageSpeed&lt;/a&gt; is very simple to use. &lt;a href="https://developers.google.com/speed/pagespeed/"&gt;Visit the site&lt;/a&gt;, then follow its suggestions, especially the high priority ones. Once the high priority stuff is solved, page score can be significantly high. It is that simple.&lt;/p&gt;
+
+&lt;p&gt;&lt;img title="Google PageSpeed" alt="Google PageSpeed" src="/images/pagespeed.png?1368117498" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Most of the time, I get better score when I use flat design and zero images (no background images, at least). With that, I am going back to trying to understand color theory and typography. Both concepts are enough to make sites looking good with fast speed.&lt;/p&gt;
+
+&lt;hr/&gt;
+
+&lt;p&gt;The above are all my stages of studying web design until now. At least, it&amp;#39;s something!&lt;/p&gt;
+
+&lt;p&gt;&lt;img title="It's something!" alt="It's something!" src="/images/something.jpg?1368117498" /&gt;&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>Extending Sets in Redis</title>
     <link rel="alternate" href="/2013/03/15/extending-sets-in-redis.html"/>
@@ -19,28 +111,28 @@
       <name>Article Author</name>
     </author>
     <summary type="html">&lt;p&gt;I seem to encounter some patterns where I need to have Hash data structure in Redis. I sometimes need their values as a list or a set.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;# ruby&lt;/span&gt;
-&lt;span class="nb"&gt;hash&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-  &lt;span class="ss"&gt;cheez&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;burger&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-  &lt;span class="ss"&gt;hello&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="no"&gt;Set&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;yay&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="lineno"&gt;2&lt;/span&gt; &lt;span class="c1"&gt;# ruby&lt;/span&gt;
+&lt;span class="lineno"&gt;3&lt;/span&gt; &lt;span class="nb"&gt;hash&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="lineno"&gt;4&lt;/span&gt;   &lt;span class="ss"&gt;cheez&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;burger&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="lineno"&gt;5&lt;/span&gt;   &lt;span class="ss"&gt;hello&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="no"&gt;Set&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;yay&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="lineno"&gt;6&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Hash in Redis does not support the above structure by default. However, by using Set and another data structure, we can simulate it.&lt;/p&gt;
 </summary>
     <content type="html">&lt;p&gt;I seem to encounter some patterns where I need to have Hash data structure in Redis. I sometimes need their values as a list or a set.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;# ruby&lt;/span&gt;
-&lt;span class="nb"&gt;hash&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-  &lt;span class="ss"&gt;cheez&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;burger&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-  &lt;span class="ss"&gt;hello&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="no"&gt;Set&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;yay&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="lineno"&gt;2&lt;/span&gt; &lt;span class="c1"&gt;# ruby&lt;/span&gt;
+&lt;span class="lineno"&gt;3&lt;/span&gt; &lt;span class="nb"&gt;hash&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="lineno"&gt;4&lt;/span&gt;   &lt;span class="ss"&gt;cheez&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;burger&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="lineno"&gt;5&lt;/span&gt;   &lt;span class="ss"&gt;hello&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="no"&gt;Set&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;yay&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="lineno"&gt;6&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Hash in Redis does not support the above structure by default. However, by using Set and another data structure, we can simulate it.&lt;/p&gt;
 
 &lt;h2&gt;First Approach&lt;/h2&gt;
 
 &lt;p&gt;First, we are going to implement naive approach like below.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;HSET&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;cheez&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;burger&lt;/span&gt;&amp;quot;
-&lt;span class="n"&gt;HSET&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hello&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;world&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;yay&lt;/span&gt;&amp;quot;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="lineno"&gt;2&lt;/span&gt; &lt;span class="no"&gt;HSET&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;cheez&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;burger&amp;quot;&lt;/span&gt;
+&lt;span class="lineno"&gt;3&lt;/span&gt; &lt;span class="no"&gt;HSET&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hello&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;world,yay&amp;quot;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Alright, those can solve our problem here but... we need hack for the above structure to work. &lt;/p&gt;
 
@@ -51,12 +143,12 @@
 &lt;h2&gt;An Extensible Approach Using Sets&lt;/h2&gt;
 
 &lt;p&gt;Let&amp;#39;s go back to definition of Hash in Ruby. Hash contains arbitrary key and value pairs, and the keys are unique. In other words, we can represent Hash keys in Ruby as one Set in Redis.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;SADD&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;cheez&lt;/span&gt;&amp;quot;
-&lt;span class="n"&gt;SADD&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hello&lt;/span&gt;&amp;quot;
-
-&lt;span class="n"&gt;RPUSH&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;cheez&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;burger&lt;/span&gt;&amp;quot;
-&lt;span class="n"&gt;SADD&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;hello&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;world&lt;/span&gt;&amp;quot;
-&lt;span class="n"&gt;SADD&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;hello&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;yay&lt;/span&gt;&amp;quot;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="lineno"&gt;2&lt;/span&gt; &lt;span class="no"&gt;SADD&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;cheez&amp;quot;&lt;/span&gt;
+&lt;span class="lineno"&gt;3&lt;/span&gt; &lt;span class="no"&gt;SADD&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hello&amp;quot;&lt;/span&gt;
+&lt;span class="lineno"&gt;4&lt;/span&gt; 
+&lt;span class="lineno"&gt;5&lt;/span&gt; &lt;span class="no"&gt;RPUSH&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash::cheez&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;burger&amp;quot;&lt;/span&gt;
+&lt;span class="lineno"&gt;6&lt;/span&gt; &lt;span class="no"&gt;SADD&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash::hello&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;world&amp;quot;&lt;/span&gt;
+&lt;span class="lineno"&gt;7&lt;/span&gt; &lt;span class="no"&gt;SADD&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash::hello&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;yay&amp;quot;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;So, what we did was storing Hash keys in Redis set, then we store the values using another Redis data structure. Not so bad, eh?&lt;/p&gt;
 
@@ -67,23 +159,23 @@
 &lt;p&gt;This step is not necessary if your app does not need the above stuff as atomic operation.&lt;/p&gt;
 
 &lt;p&gt;Let&amp;#39;s step back a bit. This is what we want.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;# ruby&lt;/span&gt;
-&lt;span class="nb"&gt;hash&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-  &lt;span class="ss"&gt;cheez&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;burger&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-  &lt;span class="ss"&gt;hello&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="no"&gt;Set&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;yay&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="lineno"&gt;2&lt;/span&gt; &lt;span class="c1"&gt;# ruby&lt;/span&gt;
+&lt;span class="lineno"&gt;3&lt;/span&gt; &lt;span class="nb"&gt;hash&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="lineno"&gt;4&lt;/span&gt;   &lt;span class="ss"&gt;cheez&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;burger&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="lineno"&gt;5&lt;/span&gt;   &lt;span class="ss"&gt;hello&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="no"&gt;Set&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;yay&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="lineno"&gt;6&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Anytime you set key-value pair to hash, you want it to be (as if) one batch of operation. To make multiple commands work as one unit, use multi/exec.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;MULTI&lt;/span&gt;
-&lt;span class="n"&gt;SADD&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;cheez&lt;/span&gt;&amp;quot;
-&lt;span class="n"&gt;LADD&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;cheez&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;burger&lt;/span&gt;&amp;quot;
-&lt;span class="n"&gt;EXEC&lt;/span&gt;
-
-&lt;span class="n"&gt;MULTI&lt;/span&gt;
-&lt;span class="n"&gt;SADD&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hello&lt;/span&gt;&amp;quot;
-&lt;span class="n"&gt;SADD&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;hello&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;world&lt;/span&gt;&amp;quot;
-&lt;span class="n"&gt;SADD&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;hash&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;hello&lt;/span&gt;&amp;quot;&lt;span class="p"&gt;,&lt;/span&gt; &amp;quot;&lt;span class="n"&gt;yay&lt;/span&gt;&amp;quot;
-&lt;span class="n"&gt;EXEC&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="lineno"&gt; 2&lt;/span&gt; &lt;span class="no"&gt;MULTI&lt;/span&gt;
+&lt;span class="lineno"&gt; 3&lt;/span&gt; &lt;span class="no"&gt;SADD&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;cheez&amp;quot;&lt;/span&gt;
+&lt;span class="lineno"&gt; 4&lt;/span&gt; &lt;span class="no"&gt;LADD&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash::cheez&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;burger&amp;quot;&lt;/span&gt;
+&lt;span class="lineno"&gt; 5&lt;/span&gt; &lt;span class="no"&gt;EXEC&lt;/span&gt;
+&lt;span class="lineno"&gt; 6&lt;/span&gt; 
+&lt;span class="lineno"&gt; 7&lt;/span&gt; &lt;span class="no"&gt;MULTI&lt;/span&gt;
+&lt;span class="lineno"&gt; 8&lt;/span&gt; &lt;span class="no"&gt;SADD&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hello&amp;quot;&lt;/span&gt;
+&lt;span class="lineno"&gt; 9&lt;/span&gt; &lt;span class="no"&gt;SADD&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash::hello&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;world&amp;quot;&lt;/span&gt;
+&lt;span class="lineno"&gt;10&lt;/span&gt; &lt;span class="no"&gt;SADD&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash::hello&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;yay&amp;quot;&lt;/span&gt;
+&lt;span class="lineno"&gt;11&lt;/span&gt; &lt;span class="no"&gt;EXEC&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;There is another term called pipelining, which is similar to multi/exec. &lt;a href="https://groups.google.com/forum/?fromgroups=#!topic/redis-db/zVXsg0bjrbg"&gt;Pipelining is for batch of Redis commands, multi/exec is good for atomicity&lt;/a&gt;.&lt;/p&gt;
 </content>
