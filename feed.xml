@@ -1,22 +1,229 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Blog Name</title>
-  <subtitle>Blog subtitle</subtitle>
-  <id>http://blog.url.com/</id>
-  <link href="http://blog.url.com/"/>
-  <link href="http://blog.url.com/feed.xml" rel="self"/>
-  <updated>2013-05-09T00:00:00Z</updated>
+  <title>CatCyb.org Logs</title>
+  <subtitle>Written by an Engineer</subtitle>
+  <id>http://nyan.catcyb.org/</id>
+  <link href="http://nyan.catcyb.org/"/>
+  <link href="http://nyan.catcyb.org/feed.xml" rel="self"/>
+  <updated>2013-07-09T00:00:00Z</updated>
   <author>
-    <name>Blog Author</name>
+    <name>CatCyborg</name>
   </author>
   <entry>
+    <title>4 Tips to Build Fast Websites</title>
+    <link rel="alternate" href="/2013/07/09/5-tips-to-build-fast-websites/"/>
+    <id>/2013/07/09/5-tips-to-build-fast-websites/</id>
+    <published>2013-07-09T00:00:00Z</published>
+    <updated>2013-07-09T00:00:00Z</updated>
+    <author>
+      <name>CatCyborg</name>
+    </author>
+    <summary type="html">&lt;p&gt;Sometimes, you need to build websites for showcasing company information, team details, product information, etc. Once you&amp;#39;ve done your beautiful sites, you wonder why the page loads slowly. There is very little database calls and small amount of back-end web app work.&lt;/p&gt;
+
+&lt;p&gt;Take a deep breath.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;m gonna explain 4 common tips to help you build fast websites, and show you the tools related. Be happy, most of the tools are free. Sit back and grab some chips!&lt;/p&gt;
+</summary>
+    <content type="html">&lt;p&gt;Sometimes, you need to build websites for showcasing company information, team details, product information, etc. Once you&amp;#39;ve done your beautiful sites, you wonder why the page loads slowly. There is very little database calls and small amount of back-end web app work.&lt;/p&gt;
+
+&lt;p&gt;Take a deep breath.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;m gonna explain 4 common tips to help you build fast websites, and show you the tools related. Be happy, most of the tools are free. Sit back and grab some chips!&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;The 4 Tips:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Sanity Check&lt;/li&gt;
+&lt;li&gt;Optimize Images&lt;/li&gt;
+&lt;li&gt;Optimize Javascript and CSS: Combine, Minify and GZip Them&lt;/li&gt;
+&lt;li&gt;Cache Static Assets Using HTTP Cache Headers and/or CDN&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2&gt;Sanity Check&lt;/h2&gt;
+
+&lt;p&gt;Are you sure the problem is in the front-end and not on the hosting server? Check it out just to be sure! You will need to examine the network from your website via a development tool in a web browser of your choice.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Google Chrome: &lt;a href="https://developers.google.com/chrome-developer-tools/"&gt;Use DevTools&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Firefox: &lt;a href="http://getfirebug.com/html"&gt;Use Firebug&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Internet Explorer &amp;gt;= 9: &lt;a href="http://www.sitepoint.com/debug-faster-with-f12-developer-tools-in-internet-explorer-9/#one"&gt;Use the Network Inspection Tab&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Safari: &lt;a href="https://developer.apple.com/technologies/safari/developer-tools.html"&gt;Enable the Develop Menu in Safari’s Advanced Preferences&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Reload your page and see which requests take the most time. Out of the slow requests, there are at least three categories below which can be improved.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The request roundtrip time to your site&amp;#39;s page (most probably the HTML markup)&lt;/li&gt;
+&lt;li&gt;The request roundtrip time to get images on your site&lt;/li&gt;
+&lt;li&gt;The request roundtrip time to get Javascript/CSS files needed by your site&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In addition to the development tool, use &lt;a href="https://developers.google.com/speed/pagespeed/"&gt;Google PageSpeed&lt;/a&gt; to get to know your page score. A good score is at least close to 90. If you&amp;#39;ve already done the next three sections I&amp;#39;m gonna explain, you can get around 70-90, which is very close! If you haven&amp;#39;t done any optimization, your page scores can be around 30-60.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;If you already get score above 90 but the request time is slow due to slow HTML page response time, feel free to ignore this article!&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2&gt;Optimize Images&lt;/h2&gt;
+
+&lt;p&gt;&lt;em&gt;If your sites don&amp;#39;t have any images, feel free to skip to the next section.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Why should we think that images can be the culprit of slowness? First of all, if you reach this point, it seems that you use some or plenty of images in your site. Second, their sizes are big if they are not optimized for the web.&lt;/p&gt;
+
+&lt;p&gt;Where did you get your images? Image software, your camera, or somewhere online? Chances are images from those sources contain extraneous metadata and lots of colors. Some of these metadata aren&amp;#39;t necessary for the web, and some colors can be &amp;#39;compressed&amp;#39; with other colors. These extraneous data can be removed from the image and save lots of bytes, without actually affecting the image quality so much.&lt;/p&gt;
+
+&lt;p&gt;Alright. That&amp;#39;s complicated. Why do we even care?&lt;/p&gt;
+
+&lt;p&gt;Remember that the Internet speed varies among different regions and countries; some have blazing fast speed, some have moderately slow speed. If your goal is to serve lots of Internet users, you need to consider the number of bytes transferred. You might actually find out that images take lots of bytes and slow down your whole site!&lt;/p&gt;
+
+&lt;p&gt;Don&amp;#39;t worry! Plenty of free tools for image optimization are available. If you already have images you showcase publicly, you will need some script to automate optimizing existing images and the new ones. The automation can take quite some effort. Nevertheless, it is so worthed when your site has a few big images or lots of small ones.&lt;/p&gt;
+
+&lt;p&gt;Before using any tools to optimize images, please make sure that exact image sizes are used on your site. They should not be scaled (down) at all, if possible.&lt;/p&gt;
+
+&lt;p&gt;Alright. These are the tools for compressing or optimizing images.&lt;/p&gt;
+
+&lt;h3&gt;Command Line&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://pmt.sourceforge.net/pngcrush/"&gt;PngCrush&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://advsys.net/ken/utils.htm"&gt;PNGOUT&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.lcdf.org/gifsicle/"&gt;Gifsicle&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://freecode.com/projects/jpegoptim"&gt;JpegOptim&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;...&lt;a href="https://www.google.com.sg/search?q=image+optimization+command+line&amp;oq=image+optimization+command+line&amp;ie=UTF-8"&gt;and many more!&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Desktop&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://imageoptim.com/"&gt;ImageOptim&lt;/a&gt; for Mac&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://pnggauntlet.com/"&gt;PNGGauntlet&lt;/a&gt; for Windows&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://trimage.org/"&gt;Trimage&lt;/a&gt; for Linux&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Online&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.smushit.com/ysmush.it/"&gt;Smush.it&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://tinypng.org/"&gt;TinyPNG&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Optimize Javascript and CSS: Combine, Minify and GZip Them&lt;/h2&gt;
+
+&lt;p&gt;This can seem tedious at the first glance. Thankfully, there are tools that can combine and minify assets (CSS, Javascript).&lt;/p&gt;
+
+&lt;p&gt;But wait! Why should we do this in the first place?&lt;/p&gt;
+
+&lt;h3&gt;Why Combine?&lt;/h3&gt;
+
+&lt;p&gt;Say, you have the habit of separating Javascript files into different concerns such as model, views, controllers, helpers, widget X, widget Y, etc. Or, you have the habit of separating CSS files for the base layout, sections, widgets, etc. That is great. Keep it up!&lt;/p&gt;
+
+&lt;p&gt;Then, in your HTML views, you reference all those files one by one like this…&lt;/p&gt;
+&lt;pre class="highlight text"&gt;&amp;lt;link href=&amp;quot;style1.css&amp;quot; /&amp;gt;
+&amp;lt;link href=&amp;quot;style2.css&amp;quot; /&amp;gt;
+&amp;lt;link href=&amp;quot;style3.css&amp;quot; /&amp;gt;
+&amp;lt;link href=&amp;quot;style4.css&amp;quot; /&amp;gt;
+...
+&lt;/pre&gt;
+&lt;p&gt;Imagine if the browser fetches all your Javascript and CSS files one by one...Wait...how many of those files do you have? 10? 20? Whoa, the browser&amp;#39;s gonna create a lot of requests! &lt;strong&gt;One browser can only do 4-6 requests concurrently&lt;/strong&gt;, so please make sure you make use of that limitation effectively.&lt;/p&gt;
+
+&lt;p&gt;It would be great if the browser only need to fetch once for a combined Javascript file, and another one time for a combined CSS file (instead of 10, 20, or a lot). This means, effort to combine those files is necessary. Combining files is as easy as copying and pasting everything to a brand new file. You get what I mean. And of course that&amp;#39;s really tedious to do if you do it by hand for lots of files.&lt;/p&gt;
+
+&lt;p&gt;You can use &lt;code&gt;cat&lt;/code&gt; or other command-line tools, but you might want a more elegant way of doing this than creating custom scripts.&lt;/p&gt;
+
+&lt;p&gt;Continue to the next section!&lt;/p&gt;
+
+&lt;h3&gt;Why Minify?&lt;/h3&gt;
+
+&lt;p&gt;Now that you saved the number of requests on your site by combining assets, you can compress the content further. In your CSS files, do you see whitespaces? In your Javascript files, do you see whitespaces and long variable/method names? We all do. Getting rid of those unnecessary whitespaces and compressing long names (while maintaining the same code behavior) can reduce the overall file size. &lt;a href="http://en.wikipedia.org/wiki/Minification_(programming)"&gt;That is what minification does, generally.&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Of course, you can remove whitespaces with your custom scripts, but compressing long names need some effort. &lt;a href="https://developers.google.com/closure/compiler/"&gt;Google Closure Compiler&lt;/a&gt; and &lt;a href="http://yui.github.io/yuicompressor/"&gt;YUI Compressor&lt;/a&gt; are some of the most popular tools to help you do minification. Give the CSS or Javascript file name you want to compress and voila, the corresponding compressed file will be created!&lt;/p&gt;
+
+&lt;p&gt;While you&amp;#39;re pretty sure that minification can save lots of bytes, sometimes you aren&amp;#39;t quite satisfied with the result. There are a few ways to optimize your code for minification, &lt;a href="http://www.edave.net/2009/10/18/maximising-javascript-minimisation-and-readability/"&gt;as mentioned in this blog post&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Why GZip?&lt;/h3&gt;
+
+&lt;p&gt;After minification, the content can be compressed further by GZipping the file. Some browsers and servers might not support this, but the amount of bytes transferred can be reduced significantly if GZip is supported by both parties.&lt;/p&gt;
+
+&lt;p&gt;You can GZip on the fly using your web server (Apache, &lt;a href="http://wiki.nginx.org/HttpGzipModule"&gt;Nginx&lt;/a&gt;, etc.), or just provide the gzipped version of your assets in your web application.&lt;/p&gt;
+
+&lt;h3&gt;The Tools!&lt;/h3&gt;
+
+&lt;p&gt;Now comes the fun part. There are tools which can combine, minify and gzip your CSS and JavaScript assets.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;If you use Ruby:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://documentcloud.github.io/jammit/"&gt;Jammit&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/sstephenson/sprockets"&gt;Sprockets&lt;/a&gt;&lt;br/&gt;&lt;a href="http://rubyonrails.org/"&gt;Rails&lt;/a&gt; or &lt;a href="http://middlemanapp.com"&gt;Middleman&lt;/a&gt; already include this!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;em&gt;Most of the tools above also come with CSS preprocessors (SASS, SCSS) and a JavaScript preprocessor (CoffeeScript) too!&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;If you use ASP.NET:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://getcassette.net/"&gt;Cassette&lt;/a&gt;&lt;br/&gt;This comes with CSS and Javascript preprocessors!&lt;/li&gt;
+&lt;li&gt;Asset bundle&lt;br/&gt;This is already provided by default.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Cache Static Assets Using HTTP Cache Headers and/or CDN&lt;/h2&gt;
+
+&lt;p&gt;You might think that the above optimizations are enough. You already cut the number of bytes transferred from your web server to the browser. You already minimize the number of requests from the browser to the web server. What else can you save?&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;The distance of bytes transfers!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The way a byte travel from your site to the browser is not like a straight line. It looks more like a graph a connections; there are intermediate servers between your web server and the browser.&lt;/p&gt;
+
+&lt;p&gt;Just by distributing your assets closer to your visitors, you can speed up your website response times…at least according to those visitors. This can be done using &lt;strong&gt;Content Delivery Network&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;But that can be a little bit overkill for sites with small number of visitors…&lt;/p&gt;
+
+&lt;p&gt;Don&amp;#39;t start distributing just yet. There is a trick you can use. Tell browsers to cache resources so that they don&amp;#39;t do requests unless necessary! We can tell them just by setting HTTP Cache Headers via web applications or web servers.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s talk about the HTTP Cache Headers first.&lt;/p&gt;
+
+&lt;h3&gt;HTTP Cache Headers&lt;/h3&gt;
+
+&lt;p&gt;The fastest way to make a request faster is not to do the request at all. Obviously.&lt;/p&gt;
+
+&lt;p&gt;As long as your web server (like Apache, Nginx, etc.) obeys HTTP server spec, you can apply HTTP Cache Headers for your assets and web pages. Those headers can tell the gateway or browser so that those files are cached until certain time or until the file content is changed. How?&lt;/p&gt;
+
+&lt;p&gt;There are two types of cache headers.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Expiration: Tells the browsers or gateway to expire cached resources at certain time. This uses Expires or Cache-control header. This could be more suitable for dynamic HTML pages.&lt;/li&gt;
+&lt;li&gt;Validation: Tells the browsers or gateway to get the new resources if Last-Modified header from the client side is stale, or ETag header value is different from the actual server. This is very suited for static assets (like static HTML, Javascript, CSS, and image files)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;There are lots of more headers &lt;a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html"&gt;in the spec&lt;/a&gt; or &lt;a href="http://www.mnot.net/cache_docs/"&gt;some other docs&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;You can set these headers from your web server (&lt;a href="http://httpd.apache.org/docs/current/mod/mod_expires.html"&gt;Apache&lt;/a&gt;, &lt;a href="http://wiki.nginx.org/HttpHeadersModule"&gt;Nginx&lt;/a&gt;, etc.) or your web application (&lt;a href="http://guides.rubyonrails.org/caching_with_rails.html#conditional-get-support"&gt;Rails&lt;/a&gt;, &lt;a href="http://rtomayko.github.io/rack-cache/"&gt;Rack&lt;/a&gt;, etc.). Setting the headers is trivial effort, but it impacts greatly on performance.&lt;/p&gt;
+
+&lt;p&gt;If you don&amp;#39;t want to do that setup for your static assets, use &lt;a href="http://pages.github.com/"&gt;GitHub Pages&lt;/a&gt; to host your files. It already applies HTTP Cache Headers for each of the files.&lt;/p&gt;
+
+&lt;h3&gt;CDN&lt;/h3&gt;
+
+&lt;p&gt;Alright. After you apply the proper cache headers, you think that things are going well. That is true, until you see visitors from the other side of the world complaining your site is slow. Or, you see for yourself in another country that the site is slow. For this case, you might want to cut the round trip time a little bit more by hosting those static assets (CSS, Javascript, images) on Content Delivery Network (CDN).&lt;/p&gt;
+
+&lt;p&gt;What is that CDN thing?&lt;/p&gt;
+
+&lt;p&gt;CDN is just like your server (for assets), with a lot more other servers are sitting in different countries and regions. So, they are actually a network of servers. Once you upload your files to the CDN, it will distribute them to the different locations. When a request to your file come from a browser, the CDN will respond from a server closest to where the request come from. This reduces the travelling time of the actual file bytes; instead of from your server in Tokyo all the way to Berlin, the file just travels within Berlin. Well, there are some small bytes from the browser, CDN server, and the actual CDN server in Berlin. Luckily, that&amp;#39;s pretty short and fast trip!&lt;/p&gt;
+
+&lt;p&gt;There are &lt;a href="https://en.wikipedia.org/wiki/Content_delivery_network#Notable_content_delivery_service_providers"&gt;plenty of CDNs&lt;/a&gt; like &lt;a href="http://aws.amazon.com/cloudfront/"&gt;Amazon CloudFront&lt;/a&gt; and &lt;a href="https://www.cloudflare.com/"&gt;CloudFlare&lt;/a&gt;. They usually have certain pricing. They can be really big help for speeding up your site. You can also configure HTTP Cache Headers for each file on CDN. Feel free to refer to the specific CDNs documentations to learn more.&lt;/p&gt;
+
+&lt;hr/&gt;
+
+&lt;p&gt;Congratulations! You have reached the end of article. If you try all the above tips, your site should respond faster and have a better Google PageSpeed score than before.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
     <title>My Stages of Studying Web Design</title>
-    <link rel="alternate" href="/2013/05/09/my-stages-of-studying-web-design.html"/>
-    <id>/2013/05/09/my-stages-of-studying-web-design.html</id>
+    <link rel="alternate" href="/2013/05/09/my-stages-of-studying-web-design/"/>
+    <id>/2013/05/09/my-stages-of-studying-web-design/</id>
     <published>2013-05-09T00:00:00Z</published>
     <updated>2013-05-09T00:00:00Z</updated>
     <author>
-      <name>Article Author</name>
+      <name>CatCyborg</name>
     </author>
     <summary type="html">&lt;p&gt;This was all started with my desire to &lt;a href="2013-01-30-learning-design.html"&gt;learn design for web/mobile apps&lt;/a&gt; and understand color theory, like color schemes, color meanings, etc. It turned out that I had hard time to remember and apply the theory for the context of making websites. Still, my wonder of how web designers can put together colors and textures gorgeously did not stop. Because of that, I have been trying out colors, textures, spacing, and other things like those for &lt;a href="about.html"&gt;a couple of sites&lt;/a&gt;.&lt;/p&gt;
 </summary>
@@ -68,11 +275,11 @@
 
 &lt;p&gt;Bored with using solid colors on backgrounds? Try using patterns. I did. It might work. There are free and gorgeous stuff like in &lt;a href="http://subtlepatterns.com/"&gt;Subtle Patterns&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Subtle Patterns" alt="Subtle Patterns" src="/images/subtle-patterns.png?1368521973" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Subtle Patterns" alt="Subtle Patterns" src="/images/subtle-patterns.png?1377447065" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Another choice is to use &lt;a href="http://www.noisetexturegenerator.com/"&gt;Noise Texture Generator&lt;/a&gt; for really small image size. This is useful for replacing your solid color to be slightly different.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Noise Texture Generator" alt="Noise Texture Generator" src="/images/noise-texture-generator.png?1368521973" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Noise Texture Generator" alt="Noise Texture Generator" src="/images/noise-texture-generator.png?1377447065" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Blurred background photos are another option, but I find they are too big and can make web pages slow.&lt;/p&gt;
 
@@ -90,7 +297,7 @@
 
 &lt;p&gt;&lt;a href="https://developers.google.com/speed/pagespeed/"&gt;Google PageSpeed&lt;/a&gt; is very simple to use. &lt;a href="https://developers.google.com/speed/pagespeed/"&gt;Visit the site&lt;/a&gt;, then follow its suggestions, especially the high priority ones. Once the high priority stuff is solved, page score can be significantly high. It is that simple.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Google PageSpeed" alt="Google PageSpeed" src="/images/pagespeed.png?1368521973" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Google PageSpeed" alt="Google PageSpeed" src="/images/pagespeed.png?1377447065" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Most of the time, I get better score when I use flat design and zero images (no background images, at least). With that, I am going back to trying to understand color theory and typography. Both concepts are enough to make sites looking good with fast speed.&lt;/p&gt;
 
@@ -98,42 +305,42 @@
 
 &lt;p&gt;The above are all my stages of studying web design until now. At least, it&amp;#39;s something!&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="It's something!" alt="It's something!" src="/images/something.jpg?1368521973" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="It's something!" alt="It's something!" src="/images/something.jpg?1373345504" /&gt;&lt;/p&gt;
 </content>
   </entry>
   <entry>
     <title>Extending Sets in Redis</title>
-    <link rel="alternate" href="/2013/03/15/extending-sets-in-redis.html"/>
-    <id>/2013/03/15/extending-sets-in-redis.html</id>
+    <link rel="alternate" href="/2013/03/15/extending-sets-in-redis/"/>
+    <id>/2013/03/15/extending-sets-in-redis/</id>
     <published>2013-03-15T00:00:00Z</published>
     <updated>2013-03-15T00:00:00Z</updated>
     <author>
-      <name>Article Author</name>
+      <name>CatCyborg</name>
     </author>
     <summary type="html">&lt;p&gt;I seem to encounter some patterns where I need to have Hash data structure in Redis. I sometimes need their values as a list or a set.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="lineno"&gt;2&lt;/span&gt; &lt;span class="c1"&gt;# ruby&lt;/span&gt;
-&lt;span class="lineno"&gt;3&lt;/span&gt; &lt;span class="nb"&gt;hash&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="lineno"&gt;4&lt;/span&gt;   &lt;span class="ss"&gt;cheez&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;burger&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="lineno"&gt;5&lt;/span&gt;   &lt;span class="ss"&gt;hello&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="no"&gt;Set&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;yay&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="lineno"&gt;6&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="c1"&gt;# ruby&lt;/span&gt;
+&lt;span class="nb"&gt;hash&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="ss"&gt;cheez: &lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;burger&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="ss"&gt;hello: &lt;/span&gt;&lt;span class="no"&gt;Set&lt;/span&gt;&lt;span class="nf"&gt;.new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;yay&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
 &lt;p&gt;Hash in Redis does not support the above structure by default. However, by using Set and another data structure, we can simulate it.&lt;/p&gt;
 </summary>
     <content type="html">&lt;p&gt;I seem to encounter some patterns where I need to have Hash data structure in Redis. I sometimes need their values as a list or a set.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="lineno"&gt;2&lt;/span&gt; &lt;span class="c1"&gt;# ruby&lt;/span&gt;
-&lt;span class="lineno"&gt;3&lt;/span&gt; &lt;span class="nb"&gt;hash&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="lineno"&gt;4&lt;/span&gt;   &lt;span class="ss"&gt;cheez&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;burger&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="lineno"&gt;5&lt;/span&gt;   &lt;span class="ss"&gt;hello&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="no"&gt;Set&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;yay&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="lineno"&gt;6&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="c1"&gt;# ruby&lt;/span&gt;
+&lt;span class="nb"&gt;hash&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="ss"&gt;cheez: &lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;burger&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="ss"&gt;hello: &lt;/span&gt;&lt;span class="no"&gt;Set&lt;/span&gt;&lt;span class="nf"&gt;.new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;yay&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
 &lt;p&gt;Hash in Redis does not support the above structure by default. However, by using Set and another data structure, we can simulate it.&lt;/p&gt;
 
 &lt;h2&gt;First Approach&lt;/h2&gt;
 
 &lt;p&gt;First, we are going to implement naive approach like below.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="lineno"&gt;2&lt;/span&gt; &lt;span class="no"&gt;HSET&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;cheez&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;burger&amp;quot;&lt;/span&gt;
-&lt;span class="lineno"&gt;3&lt;/span&gt; &lt;span class="no"&gt;HSET&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hello&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;world,yay&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="highlight text"&gt;HSET &amp;quot;hash&amp;quot;, &amp;quot;cheez&amp;quot;, &amp;quot;burger&amp;quot;
+HSET &amp;quot;hash&amp;quot;, &amp;quot;hello&amp;quot;, &amp;quot;world,yay&amp;quot;
+&lt;/pre&gt;
 &lt;p&gt;Alright, those can solve our problem here but... we need hack for the above structure to work. &lt;/p&gt;
 
 &lt;p&gt;Let&amp;#39;s look at &lt;code&gt;cheez&lt;/code&gt;. Imagine we will have array of values of &lt;code&gt;&amp;quot;cheez&amp;quot;&lt;/code&gt;, then we need long comma-separated values for that. Ok, maybe we can use JSON, but again, it&amp;#39;s another hack just to parse the stored JSON. And those are not including some concurrency issues that might appear someday...&lt;/p&gt;
@@ -143,13 +350,13 @@
 &lt;h2&gt;An Extensible Approach Using Sets&lt;/h2&gt;
 
 &lt;p&gt;Let&amp;#39;s go back to definition of Hash in Ruby. Hash contains arbitrary key and value pairs, and the keys are unique. In other words, we can represent Hash keys in Ruby as one Set in Redis.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="lineno"&gt;2&lt;/span&gt; &lt;span class="no"&gt;SADD&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;cheez&amp;quot;&lt;/span&gt;
-&lt;span class="lineno"&gt;3&lt;/span&gt; &lt;span class="no"&gt;SADD&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hello&amp;quot;&lt;/span&gt;
-&lt;span class="lineno"&gt;4&lt;/span&gt; 
-&lt;span class="lineno"&gt;5&lt;/span&gt; &lt;span class="no"&gt;RPUSH&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash::cheez&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;burger&amp;quot;&lt;/span&gt;
-&lt;span class="lineno"&gt;6&lt;/span&gt; &lt;span class="no"&gt;SADD&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash::hello&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;world&amp;quot;&lt;/span&gt;
-&lt;span class="lineno"&gt;7&lt;/span&gt; &lt;span class="no"&gt;SADD&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash::hello&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;yay&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="highlight text"&gt;SADD &amp;quot;hash&amp;quot;, &amp;quot;cheez&amp;quot;
+SADD &amp;quot;hash&amp;quot;, &amp;quot;hello&amp;quot;
+
+RPUSH &amp;quot;hash::cheez&amp;quot;, &amp;quot;burger&amp;quot;
+SADD &amp;quot;hash::hello&amp;quot;, &amp;quot;world&amp;quot;
+SADD &amp;quot;hash::hello&amp;quot;, &amp;quot;yay&amp;quot;
+&lt;/pre&gt;
 &lt;p&gt;So, what we did was storing Hash keys in Redis set, then we store the values using another Redis data structure. Not so bad, eh?&lt;/p&gt;
 
 &lt;p&gt;This approach looks complete. Though, sometimes we do need to care a bit about concurrent access and modification, especially when later on you want to change or delete the &lt;code&gt;hash&lt;/code&gt; often.&lt;/p&gt;
@@ -159,43 +366,43 @@
 &lt;p&gt;This step is not necessary if your app does not need the above stuff as atomic operation.&lt;/p&gt;
 
 &lt;p&gt;Let&amp;#39;s step back a bit. This is what we want.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="lineno"&gt;2&lt;/span&gt; &lt;span class="c1"&gt;# ruby&lt;/span&gt;
-&lt;span class="lineno"&gt;3&lt;/span&gt; &lt;span class="nb"&gt;hash&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="lineno"&gt;4&lt;/span&gt;   &lt;span class="ss"&gt;cheez&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;burger&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="lineno"&gt;5&lt;/span&gt;   &lt;span class="ss"&gt;hello&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="no"&gt;Set&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;yay&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="lineno"&gt;6&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="c1"&gt;# ruby&lt;/span&gt;
+&lt;span class="nb"&gt;hash&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="ss"&gt;cheez: &lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;burger&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="ss"&gt;hello: &lt;/span&gt;&lt;span class="no"&gt;Set&lt;/span&gt;&lt;span class="nf"&gt;.new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;yay&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
 &lt;p&gt;Anytime you set key-value pair to hash, you want it to be (as if) one batch of operation. To make multiple commands work as one unit, use multi/exec.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="lineno"&gt; 2&lt;/span&gt; &lt;span class="no"&gt;MULTI&lt;/span&gt;
-&lt;span class="lineno"&gt; 3&lt;/span&gt; &lt;span class="no"&gt;SADD&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;cheez&amp;quot;&lt;/span&gt;
-&lt;span class="lineno"&gt; 4&lt;/span&gt; &lt;span class="no"&gt;LADD&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash::cheez&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;burger&amp;quot;&lt;/span&gt;
-&lt;span class="lineno"&gt; 5&lt;/span&gt; &lt;span class="no"&gt;EXEC&lt;/span&gt;
-&lt;span class="lineno"&gt; 6&lt;/span&gt; 
-&lt;span class="lineno"&gt; 7&lt;/span&gt; &lt;span class="no"&gt;MULTI&lt;/span&gt;
-&lt;span class="lineno"&gt; 8&lt;/span&gt; &lt;span class="no"&gt;SADD&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hello&amp;quot;&lt;/span&gt;
-&lt;span class="lineno"&gt; 9&lt;/span&gt; &lt;span class="no"&gt;SADD&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash::hello&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;world&amp;quot;&lt;/span&gt;
-&lt;span class="lineno"&gt;10&lt;/span&gt; &lt;span class="no"&gt;SADD&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hash::hello&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;yay&amp;quot;&lt;/span&gt;
-&lt;span class="lineno"&gt;11&lt;/span&gt; &lt;span class="no"&gt;EXEC&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="highlight text"&gt;MULTI
+SADD &amp;quot;hash&amp;quot;, &amp;quot;cheez&amp;quot;
+LADD &amp;quot;hash::cheez&amp;quot;, &amp;quot;burger&amp;quot;
+EXEC
+
+MULTI
+SADD &amp;quot;hash&amp;quot;, &amp;quot;hello&amp;quot;
+SADD &amp;quot;hash::hello&amp;quot;, &amp;quot;world&amp;quot;
+SADD &amp;quot;hash::hello&amp;quot;, &amp;quot;yay&amp;quot;
+EXEC
+&lt;/pre&gt;
 &lt;p&gt;There is another term called pipelining, which is similar to multi/exec. &lt;a href="https://groups.google.com/forum/?fromgroups=#!topic/redis-db/zVXsg0bjrbg"&gt;Pipelining is for batch of Redis commands, multi/exec is good for atomicity&lt;/a&gt;.&lt;/p&gt;
 </content>
   </entry>
   <entry>
     <title>Playing with PageSpeed</title>
-    <link rel="alternate" href="/2013/03/14/playing-with-pagespeed.html"/>
-    <id>/2013/03/14/playing-with-pagespeed.html</id>
+    <link rel="alternate" href="/2013/03/14/playing-with-pagespeed/"/>
+    <id>/2013/03/14/playing-with-pagespeed/</id>
     <published>2013-03-14T00:00:00Z</published>
     <updated>2013-03-14T00:00:00Z</updated>
     <author>
-      <name>Article Author</name>
+      <name>CatCyborg</name>
     </author>
-    <summary type="html">&lt;p&gt;How is design related to &lt;a href="https://developers.google.com/speed/pagespeed/"&gt;PageSpeed score&lt;/a&gt;? After playing around with &lt;a href="/about.html"&gt;a bunch of side projects I built&lt;/a&gt;, I discovered these 4 things.&lt;/p&gt;
+    <summary type="html">&lt;p&gt;How is design related to &lt;a href="https://developers.google.com/speed/pagespeed/"&gt;PageSpeed score&lt;/a&gt;? After playing around with &lt;a href="/about/"&gt;a bunch of side projects I built&lt;/a&gt;, I discovered these 4 things.&lt;/p&gt;
 
 &lt;ol&gt;
 &lt;li&gt;More images can mean lower PageSpeed score, especially if the images are not optimized. So, if your site has images, be sure that they are optimized.&lt;/li&gt;
 &lt;/ol&gt;
 </summary>
-    <content type="html">&lt;p&gt;How is design related to &lt;a href="https://developers.google.com/speed/pagespeed/"&gt;PageSpeed score&lt;/a&gt;? After playing around with &lt;a href="/about.html"&gt;a bunch of side projects I built&lt;/a&gt;, I discovered these 4 things.&lt;/p&gt;
+    <content type="html">&lt;p&gt;How is design related to &lt;a href="https://developers.google.com/speed/pagespeed/"&gt;PageSpeed score&lt;/a&gt;? After playing around with &lt;a href="/about/"&gt;a bunch of side projects I built&lt;/a&gt;, I discovered these 4 things.&lt;/p&gt;
 
 &lt;ol&gt;
 &lt;li&gt;More images can mean lower PageSpeed score, especially if the images are not optimized. So, if your site has images, be sure that they are optimized.&lt;/li&gt;
@@ -209,12 +416,12 @@
   </entry>
   <entry>
     <title>Middleman or Jekyll?</title>
-    <link rel="alternate" href="/2013/03/05/middleman-or-jekyll.html"/>
-    <id>/2013/03/05/middleman-or-jekyll.html</id>
+    <link rel="alternate" href="/2013/03/05/middleman-or-jekyll/"/>
+    <id>/2013/03/05/middleman-or-jekyll/</id>
     <published>2013-03-05T00:00:00Z</published>
     <updated>2013-03-05T00:00:00Z</updated>
     <author>
-      <name>Article Author</name>
+      <name>CatCyborg</name>
     </author>
     <summary type="html">&lt;p&gt;I have used &lt;a href="https://github.com/mojombo/jekyll"&gt;Jekyll&lt;/a&gt; with &lt;a href="https://github.com/imathis/octopress"&gt;Octopress&lt;/a&gt; before. When I saw &lt;a href="http://middlemanapp.com/"&gt;Middleman&lt;/a&gt;, I immediately fell in love and left Jekyll.&lt;/p&gt;
 
@@ -231,12 +438,12 @@
   </entry>
   <entry>
     <title>Learning Design</title>
-    <link rel="alternate" href="/2013/01/30/learning-design.html"/>
-    <id>/2013/01/30/learning-design.html</id>
+    <link rel="alternate" href="/2013/01/30/learning-design/"/>
+    <id>/2013/01/30/learning-design/</id>
     <published>2013-01-30T00:00:00Z</published>
     <updated>2013-01-30T00:00:00Z</updated>
     <author>
-      <name>Article Author</name>
+      <name>CatCyborg</name>
     </author>
     <summary type="html">&lt;p&gt;For the past two years, I have been dealing with implementing designs for iOS apps or web apps.
 I sometimes wonder how designers or front end developers can create cool-looking buttons, or create
@@ -260,88 +467,6 @@ I don&amp;#39;t usually finish books, but for me, it took half a week to finish 
 Also, I have been trying to understand &lt;a href="http://www.smashingmagazine.com/2010/01/28/color-theory-for-designers-part-1-the-meaning-of-color/"&gt;color theory&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;I don&amp;#39;t think I have &amp;#39;good eyes&amp;#39;, but I&amp;#39;ll keep trying to find how much understanding I&amp;#39;ll be happy with.&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Activities on Spare Time</title>
-    <link rel="alternate" href="/2013/01/30/activities-on-spare-time.html"/>
-    <id>/2013/01/30/activities-on-spare-time.html</id>
-    <published>2013-01-30T00:00:00Z</published>
-    <updated>2013-01-30T00:00:00Z</updated>
-    <author>
-      <name>Article Author</name>
-    </author>
-    <summary type="html">&lt;p&gt;When the time comes, daily routines like working or going to school drain lots of energy.
-It&amp;#39;s important to spare some time to do things that will refresh your energy, so that you keep
-your daily routine performance somewhat balanced.&lt;/p&gt;
-
-&lt;p&gt;I find at least there are 6 ways to replenish energy.&lt;/p&gt;
-</summary>
-    <content type="html">&lt;p&gt;When the time comes, daily routines like working or going to school drain lots of energy.
-It&amp;#39;s important to spare some time to do things that will refresh your energy, so that you keep
-your daily routine performance somewhat balanced.&lt;/p&gt;
-
-&lt;p&gt;I find at least there are 6 ways to replenish energy.&lt;/p&gt;
-
-&lt;h2&gt;Do New Things&lt;/h2&gt;
-
-&lt;p&gt;Doing new things can be one of the easiest to do. It could be one-off activity that
-does not require much commitment. Here are some examples.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Travel to unknown place&lt;/li&gt;
-&lt;li&gt;Learn new programming language&lt;/li&gt;
-&lt;li&gt;Learn new language&lt;/li&gt;
-&lt;li&gt;Learn new facts&lt;/li&gt;
-&lt;li&gt;Talk to strangers&lt;/li&gt;
-&lt;li&gt;Play around with public dataset&lt;/li&gt;
-&lt;li&gt;Read new books&lt;/li&gt;
-&lt;li&gt;Watch concert of a band that you&amp;#39;ve never heard of&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;One caveat is that you need to be slightly adventurous, or at least have some curiosity.&lt;/p&gt;
-
-&lt;h2&gt;Get in Touch with Familiar People or Things&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Meet your relatives&lt;/li&gt;
-&lt;li&gt;Attend school reunions&lt;/li&gt;
-&lt;li&gt;Watch concert of a band that you like&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Go for Work out&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Long walk&lt;/li&gt;
-&lt;li&gt;Swim&lt;/li&gt;
-&lt;li&gt;Take stairs&lt;/li&gt;
-&lt;li&gt;Run&lt;/li&gt;
-&lt;li&gt;Cycle&lt;/li&gt;
-&lt;li&gt;Yoga&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Have a Regular Hobby&lt;/h2&gt;
-
-&lt;p&gt;The following activities might not be straightforward because they need regular commitment.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Play instruments&lt;/li&gt;
-&lt;li&gt;Paint&lt;/li&gt;
-&lt;li&gt;Do public speaking&lt;/li&gt;
-&lt;li&gt;Cook&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Sleep&lt;/h2&gt;
-
-&lt;p&gt;When you try all the above and none work, you can try to have a nap.
-Sometimes just sleeping a bit will get you refreshed.&lt;/p&gt;
-
-&lt;hr/&gt;
-
-&lt;p&gt;It&amp;#39;s easy to say all the above, isn&amp;#39;t it? Well, the actual execution requires lots of motivation.
-For me, I am trying to have more of playing instruments
-and reading books. I&amp;#39;d love to have working out as part of my spare time activity, and I&amp;#39;m still
-looking for ways to make it work.&lt;/p&gt;
 </content>
   </entry>
 </feed>
