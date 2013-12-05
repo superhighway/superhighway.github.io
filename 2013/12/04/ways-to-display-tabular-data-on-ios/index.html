@@ -1,0 +1,137 @@
+<!doctype html> <html> <head> <meta charset=utf-8 /> <title>Ways to Display Tabular Data on iOS | CatCyb.org Logs</title> <meta http-equiv=X-UA-Compatible content='IE=edge;chrome=1'/> <meta content='width=device-width' name=viewport /> <link href='//fonts.googleapis.com/css?family=EB+Garamond' rel=stylesheet> <link media=screen href="/stylesheets/app.css?1386201852" rel=stylesheet /> </head> <body> <div id=header> <h1><a href="/">CatCyb.org Logs</a><span class=no-w480>, written</span> by <a href="/about">an Engineer</a></h1> </div> <div id=main role=main> <h1>Ways to Display Tabular Data on iOS</h1> <p class=article-meta> written on Dec 4, 2013 / <a href="/tags/ios/">iOS</a> </p> <p>Recently, I work on an iOS app that helps its users to learn stock trading through simulation. I discovered that numbers, charts and tabular data are the most commonly used on the user interface. </p> <p>Well, that looks like quite a retarded discovery I&#39;ve ever made...<em>but probably not really!</em></p> <p>For the past 2 years, I worked on entertainment-related web/mobile apps. Usage of tiles and images are usually very prominent for this case, compare to the stock trading app.</p> <p>In stock trading and other finance-related areas, displaying numbers in tables is very important. These numbers are used by traders to decide quickly whether they have to buy, sell, or do nothing with certain stocks. Traders rely on Ms Excel sheets everyday; Excel is one of the best tools for them. Using Excel, they can make charts from tables, and many more.</p> <p>Then there are users who would like to learn to be traders. They need to get acquainted with these tools too. Numbers, tables, charts...</p> <h3>What are all these things have to do with displaying tabular data on iOS?</h3> <p>If let&#39;s say we build an iOS app for these people, we do need to make sure it somewhat simulates the tools they are already familiar with. Tables in Excel are aligned, from column to rows.</p> <p>How can we code nicely aligned numbers on iOS? How can we make their alignments and values easy to change when we need to?</p> <p>For example, we want to display data that looks like the following.</p> <pre class="highlight text">
+
+  Stock Symbol: LNKD
+  Price Bought: USD 300
+ Current Price: USD 300
+      Quantity: 10
+
+</pre> <p>There are at least three possible approaches to implement this kind of display on iOS.</p> <ol> <li>Using Static Labels (<a href="//git.io/Hbjfmg">Code on GitHub</a>)</li> <li>Using Outlet Collections of Labels (<a href="//git.io/MK5ZZw">Code on GitHub</a>)</li> <li>Using Table View (<a href="//git.io/JJsNSg">Code on GitHub</a>)</li> </ol> <h2>Using Static Labels</h2> <p><img title="Static Labels - Storyboard" alt="Static Labels - Storyboard" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-manual-alignments.png?1386201851"/></p> <p>With this approach, number description labels are hardcoded, and number values are bound manually. All labels&#39; coordinates are defined on storyboards/xibs, or perhaps hardcoded on the code.</p> <p><img title="Static Labels - Storyboard" alt="Static Labels - Storyboard" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-hardcoded-bindings.png?1386201851"/></p> <pre class="highlight ruby"><span class="sr">//</span> <span class="no">SLViewController</span><span class="nf">.m</span>
+
+<span class="c1">#import &quot;SLViewController.h&quot;</span>
+
+<span class="vi">@interface</span> <span class="no">SLViewController</span> <span class="p">()</span>
+<span class="vi">@property</span> <span class="p">(</span><span class="n">weak</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="no">IBOutlet</span> <span class="no">UILabel</span> <span class="o">*</span><span class="n">symbolLabel</span><span class="p">;</span>
+<span class="vi">@property</span> <span class="p">(</span><span class="n">weak</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="no">IBOutlet</span> <span class="no">UILabel</span> <span class="o">*</span><span class="n">priceBoughtLabel</span><span class="p">;</span>
+<span class="vi">@property</span> <span class="p">(</span><span class="n">weak</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="no">IBOutlet</span> <span class="no">UILabel</span> <span class="o">*</span><span class="n">currentPriceLabel</span><span class="p">;</span>
+<span class="vi">@property</span> <span class="p">(</span><span class="n">weak</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="no">IBOutlet</span> <span class="no">UILabel</span> <span class="o">*</span><span class="n">quantityLabel</span><span class="p">;</span>
+<span class="vi">@end</span>
+
+<span class="vi">@implementation</span> <span class="no">SLViewController</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="n">viewDidLoad</span> <span class="p">{</span>
+    <span class="o">[</span><span class="k">super</span> <span class="n">viewDidLoad</span><span class="o">]</span><span class="p">;</span>
+
+    <span class="sr">//</span> <span class="no">Hardcoded</span> <span class="nb">binding</span>
+    <span class="nb">self</span><span class="nf">.symbolLabel.text</span> <span class="o">=</span> <span class="err">@</span><span class="s2">&quot;RKUNF&quot;</span><span class="p">;</span>
+    <span class="nb">self</span><span class="nf">.priceBoughtLabel.text</span> <span class="o">=</span> <span class="err">@</span><span class="s2">&quot;USD 15.75&quot;</span><span class="p">;</span>
+    <span class="nb">self</span><span class="nf">.currentPriceLabel.text</span> <span class="o">=</span> <span class="err">@</span><span class="s2">&quot;USD 14.98&quot;</span><span class="p">;</span>
+    <span class="nb">self</span><span class="nf">.quantityLabel.text</span> <span class="o">=</span> <span class="err">@</span><span class="s2">&quot;100&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="vi">@end</span>
+
+</pre> <p><img title="Static Labels - iOS Simulator" alt="Static Labels - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-on-simulator.png?1386201851"/></p> <p><strong>Pros:</strong></p> <ul> <li>This is the first approach that probably most iOS developers can think of. Very nice for building prototypes or quickly hack something.</li> <li>Easy to implement at first, for very small set of labels</li> </ul> <p><strong>Cons:</strong></p> <ul> <li><strong>Aligning labels are done manually.</strong> Wow, that&#39;s hard and tedious. As you can see from the screenshots above, the alignments don&#39;t look quite right.</li> <li><strong>Adding or removing labels requires aligning labels manually.</strong> Lots of manual work here. If there is not enough space, rearranging all the labels is necessary. Try adding a new row for <code>Profit/Loss: -USD 77</code>, and see how long you spend to align the labels.</li> <li><strong>UI and data binding is hardcoded.</strong> If you add <code>Profit/Loss: -USD 77</code> as a new row, most chances are that you will add two UILabel, one for <code>Profit/Loss:</code> and <code>-USD 77</code>.</li> <li><strong>When there are set of similar data to be displayed, there is tendency to duplicate the codes and the labels</strong>. This is because sharing same set of data requires more typing than copying and pasting labels with existing alignment.</li> </ul> <p><a href="//git.io/Hbjfmg">Feel free to download the code from GitHub.</a></p> <h2>Using Outlet Collections of Labels</h2> <p><img title="Outlet Collections of Labels - Manual Alignments" alt="Outlet Collections of Labels - Manual Alignments" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-manual-alignments.png?1386201851"/></p> <p>With this approach, number description labels are not hardcoded, and number values are bound dynamically. However, all the labels&#39; positions are defined on storyboards/xibs, or perhaps hardcoded on the code. Overall, this is a slightly more dynamic approach than using static labels.</p> <p><img title="Outlet Collections of Labels - Dynamic Bindings" alt="Outlet Collections of Labels - Dynamic Bindings" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-dynamic-bindings.png?1386201851"/></p> <pre class="highlight ruby"><span class="sr">//</span> <span class="no">OCViewController</span>
+
+<span class="c1">#import &quot;OCViewController.h&quot;</span>
+
+<span class="vi">@interface</span> <span class="no">OCViewController</span> <span class="p">()</span>
+<span class="vi">@property</span> <span class="p">(</span><span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="no">IBOutletCollection</span><span class="p">(</span><span class="no">UILabel</span><span class="p">)</span> <span class="no">NSArray</span> <span class="o">*</span><span class="n">nameLabels</span><span class="p">;</span>
+<span class="vi">@property</span> <span class="p">(</span><span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="no">IBOutletCollection</span><span class="p">(</span><span class="no">UILabel</span><span class="p">)</span> <span class="no">NSArray</span> <span class="o">*</span><span class="n">valueLabels</span><span class="p">;</span>
+<span class="vi">@end</span>
+
+<span class="vi">@implementation</span> <span class="no">OCViewController</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="n">viewDidLoad</span> <span class="p">{</span>
+    <span class="o">[</span><span class="k">super</span> <span class="n">viewDidLoad</span><span class="o">]</span><span class="p">;</span>
+
+    <span class="sr">//</span> <span class="no">Names</span> <span class="n">and</span> <span class="n">values</span> <span class="n">are</span> <span class="n">easily</span> <span class="n">modifiable</span><span class="o">.</span>
+    <span class="no">NSArray</span> <span class="o">*</span><span class="n">names</span> <span class="o">=</span> <span class="err">@</span><span class="o">[</span><span class="err">@</span><span class="s2">&quot;Symbol =&gt; &quot;</span><span class="p">,</span> <span class="err">@</span><span class="s2">&quot;Bought =&gt; &quot;</span><span class="p">,</span> <span class="err">@</span><span class="s2">&quot;Current =&gt; &quot;</span><span class="p">,</span> <span class="err">@</span><span class="s2">&quot;Qty =&gt; &quot;</span><span class="o">]</span><span class="p">;</span>
+    <span class="no">NSArray</span> <span class="o">*</span><span class="n">values</span> <span class="o">=</span> <span class="err">@</span><span class="o">[</span><span class="err">@</span><span class="s2">&quot;LNKD&quot;</span><span class="p">,</span> <span class="err">@</span><span class="s2">&quot;USD 350&quot;</span><span class="p">,</span> <span class="err">@</span><span class="s2">&quot;USD 300&quot;</span><span class="p">,</span> <span class="err">@</span><span class="s2">&quot;80&quot;</span><span class="o">]</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="no">NSInteger</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">names</span><span class="nf">.count</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="o">[</span><span class="p">(</span><span class="no">UILabel</span> <span class="o">*</span><span class="p">)</span><span class="nb">self</span><span class="nf">.nameLabels</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="n">setText</span><span class="ss">:names</span><span class="o">[</span><span class="n">i</span><span class="o">]]</span><span class="p">;</span>
+        <span class="o">[</span><span class="p">(</span><span class="no">UILabel</span> <span class="o">*</span><span class="p">)</span><span class="nb">self</span><span class="nf">.valueLabels</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="n">setText</span><span class="ss">:values</span><span class="o">[</span><span class="n">i</span><span class="o">]]</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="vi">@end</span>
+
+</pre> <p><img title="Outlet Collections of Labels - iOS Simulator" alt="Outlet Collections of Labels - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-on-simulator.png?1386201851"/></p> <p><strong>Pros:</strong></p> <ul> <li><strong>Changing labels only requires changing the code (the name and value arrays)</strong>; storyboards/xibs don&#39;t need to be modified.</li> <li><strong>Sharing similar set of row data is a little bit easier than the static labels approach.</strong> Imagine if you have similar kind of table somewhere and you want to use the same calculations for the values.</li> </ul> <p><strong>Cons:</strong></p> <ul> <li><strong>Aligning labels are still done manually.</strong> Good luck with that!</li> <li><strong>Adding or removing labels still requires aligning labels manually.</strong> If there is not enough space, you will need to rearrange all the labels by hand again...</li> <li><strong>When there are set of similar data to be displayed, there is tendency to duplicate the labels</strong>. Notice that it&#39;s a little bit cleaner here than in the previous way; here there&#39;s less tendency to copy the codes...but duplicating the labels is still pretty bad, especially if there&#39;s a way not to do so.</li> </ul> <p><a href="//git.io/MK5ZZw">Feel free to download the code from GitHub.</a></p> <h2>Using Table View</h2> <p><img title="Table View" alt="Table View" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view.png?1386201851"/></p> <p>In this approach, we view each row as a UITableViewCell that has a left label and a right label. The left and right label data are stored in a 2d array of row name and value pairs. This is so far the most flexible way, compare to the other two approaches.</p> <p><img title="Table View - Dynamic Bindings" alt="Table View - Dynamic Bindings" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-dynamic-bindings.png?1386201851"/></p> <pre class="highlight ruby"><span class="sr">//</span> <span class="no">TVViewController</span><span class="nf">.m</span>
+
+<span class="c1">#import &quot;TVRowTableViewCell.h&quot;</span>
+<span class="c1">#import &quot;TVViewController.h&quot;</span>
+
+<span class="vi">@interface</span> <span class="no">TVViewController</span> <span class="p">()</span> <span class="o">&lt;</span>
+    <span class="no">UITableViewDataSource</span><span class="p">,</span>
+    <span class="no">UITableViewDelegate</span>
+<span class="o">&gt;</span>
+<span class="vi">@property</span> <span class="p">(</span><span class="n">weak</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="no">IBOutlet</span> <span class="no">UITableView</span> <span class="o">*</span><span class="n">tableView</span><span class="p">;</span>
+<span class="vi">@end</span>
+
+<span class="vi">@implementation</span> <span class="no">TVViewController</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="n">viewDidLoad</span> <span class="p">{</span>
+    <span class="o">[</span><span class="k">super</span> <span class="n">viewDidLoad</span><span class="o">]</span><span class="p">;</span>
+    <span class="nb">self</span><span class="nf">.tableData</span> <span class="o">=</span> <span class="err">@</span><span class="o">[</span>
+                       <span class="err">@</span><span class="o">[</span>
+                         <span class="err">@</span><span class="o">[</span><span class="err">@</span><span class="s2">&quot;Stock Symbol:&quot;</span><span class="p">,</span> <span class="err">@</span><span class="s2">&quot;LNKD&quot;</span><span class="o">]</span><span class="p">,</span>
+                         <span class="err">@</span><span class="o">[</span><span class="err">@</span><span class="s2">&quot;Price Bought:&quot;</span><span class="p">,</span> <span class="err">@</span><span class="s2">&quot;USD 300&quot;</span><span class="o">]</span><span class="p">,</span>
+                         <span class="err">@</span><span class="o">[</span><span class="err">@</span><span class="s2">&quot;Current Price:&quot;</span><span class="p">,</span> <span class="err">@</span><span class="s2">&quot;USD 300&quot;</span><span class="o">]</span><span class="p">,</span>
+                         <span class="err">@</span><span class="o">[</span><span class="err">@</span><span class="s2">&quot;Quantity:&quot;</span><span class="p">,</span> <span class="err">@</span><span class="s2">&quot;10&quot;</span><span class="o">]</span>
+                        <span class="o">]</span><span class="p">,</span>
+                       <span class="err">@</span><span class="o">[</span>
+                         <span class="err">@</span><span class="o">[</span><span class="err">@</span><span class="s2">&quot;Profit/Loss:&quot;</span><span class="p">,</span> <span class="err">@</span><span class="s2">&quot;0&quot;</span><span class="o">]</span><span class="p">,</span>
+                         <span class="err">@</span><span class="o">[</span><span class="err">@</span><span class="s2">&quot;ROI:&quot;</span><span class="p">,</span> <span class="err">@</span><span class="s2">&quot;0%&quot;</span><span class="o">]</span>
+                        <span class="o">]</span>
+                      <span class="o">]</span><span class="p">;</span> <span class="sr">//</span> <span class="n">dummy</span>
+<span class="p">}</span>
+
+<span class="c1">#pragma mark - UITableViewDataSource</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="no">NSInteger</span><span class="p">)</span><span class="n">numberOfSectionsInTableView</span><span class="p">:(</span><span class="no">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="n">tableView</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">self</span><span class="nf">.tableData.count</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="no">NSInteger</span><span class="p">)</span><span class="n">tableView</span><span class="p">:(</span><span class="no">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="n">tableView</span> <span class="n">numberOfRowsInSection</span><span class="p">:(</span><span class="no">NSInteger</span><span class="p">)</span><span class="n">section</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">[</span><span class="nb">self</span><span class="nf">.tableData</span><span class="o">[</span><span class="n">section</span><span class="o">]</span> <span class="n">count</span><span class="o">]</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="no">UITableViewCell</span> <span class="o">*</span><span class="p">)</span><span class="n">tableView</span><span class="p">:(</span><span class="no">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="n">tableView</span> <span class="n">cellForRowAtIndexPath</span><span class="p">:(</span><span class="no">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="n">indexPath</span> <span class="p">{</span>
+    <span class="n">static</span> <span class="no">NSString</span> <span class="o">*</span><span class="n">cellIdentifier</span> <span class="o">=</span> <span class="err">@</span><span class="s2">&quot;TVRowTableViewCell&quot;</span><span class="p">;</span>
+    <span class="no">TVRowTableViewCell</span> <span class="o">*</span><span class="n">cell</span> <span class="o">=</span> <span class="o">[</span><span class="n">tableView</span> <span class="n">dequeueReusableCellWithIdentifier</span><span class="ss">:cellIdentifier</span> <span class="n">forIndexPath</span><span class="ss">:indexPath</span><span class="o">]</span><span class="p">;</span>
+    <span class="o">[</span><span class="n">cell</span> <span class="n">bindRowData</span><span class="ss">:self</span><span class="nf">.tableData</span><span class="o">[</span><span class="n">indexPath</span><span class="nf">.section</span><span class="o">][</span><span class="n">indexPath</span><span class="nf">.row</span><span class="o">]]</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">cell</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">#pragma mark - UITableViewDelegate</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="no">UIView</span> <span class="o">*</span><span class="p">)</span><span class="n">tableView</span><span class="p">:(</span><span class="no">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="n">tableView</span> <span class="n">viewForFooterInSection</span><span class="p">:(</span><span class="no">NSInteger</span><span class="p">)</span><span class="n">section</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">[[</span><span class="no">UIView</span> <span class="n">alloc</span><span class="o">]</span> <span class="n">initWithFrame</span><span class="ss">:CGRectZero</span><span class="o">]</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="vi">@end</span>
+
+</pre> <p><img title="Table View - Row" alt="Table View - Row" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-row.png?1386201851"/></p> <pre class="highlight ruby"><span class="sr">//</span> <span class="no">TVRowTableViewCell</span><span class="nf">.m</span>
+
+<span class="c1">#import &quot;TVRowTableViewCell.h&quot;</span>
+
+<span class="vi">@implementation</span> <span class="no">TVRowTableViewCell</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="n">bindRowData</span><span class="p">:(</span><span class="no">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="n">rowData</span> <span class="p">{</span>
+    <span class="nb">self</span><span class="nf">.leftLabel.text</span> <span class="o">=</span> <span class="n">rowData</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">;</span>
+    <span class="nb">self</span><span class="nf">.rightLabel.text</span> <span class="o">=</span> <span class="n">rowData</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="vi">@end</span>
+
+</pre> <p><img title="Table View - iOS Simulator" alt="Table View - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-on-simulator.png?1386201851"/></p> <p><strong>Pros:</strong></p> <ul> <li><strong>Align the cell once, and its alignment is applied for the rest of the table rows.</strong> Compare this to the previous two approaches where you have to align all labels manually.</li> <li><strong>Adding more name value pairs only requires code change</strong>; storyboard/xib changes are not required.</li> <li><strong>There is less tendency to copy-paste labels than the previous two approaches.</strong> When you need to display this thing elsewhere, similar data -&gt; Can share data+calculation at least</li> <li><strong>This approach gives the least number among the possible three approaches</strong> if there are plenty of name value pairs (&gt; 5).</li> </ul> <p><strong>Cons:</strong></p> <ul> <li><strong>It takes some time to setup the table view and cell.</strong> However, this is one-time setup for all rows, so...it&#39;s not so bad.</li> <li><strong>This is probably not the first approach iOS developers can think of.</strong> This pattern is more common in JavaScript chart libraries; you &quot;plug&quot; 2d arrays of table data to display a fancy chart or table.</li> </ul> <p><a href="//git.io/JJsNSg">Feel free to download the code from GitHub.</a></p> <hr> <p>Those are the three ways I can think of. While there are pros and cons for each of the approaches, I prefer using the table view.</p> </div> <div id=footer> <p><a href="/">CatCyb.org Logs</a>, themed by <a href="//catcyb.org">CatCyb.org</a>, powered by <a href="//middlemanapp.com/">Middleman</a></p> </div> <script>
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-38935144-1']);
+      _gaq.push(['_trackPageview']);
+      _gaq.push(['_trackPageLoadTime']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script> </body> </html>

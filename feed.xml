@@ -5,14 +5,268 @@
   <id>http://nyan.catcyb.org/</id>
   <link href="http://nyan.catcyb.org/"/>
   <link href="http://nyan.catcyb.org/feed.xml" rel="self"/>
-  <updated>2013-07-09T00:00:00Z</updated>
+  <updated>2013-12-04T00:00:00Z</updated>
   <author>
     <name>CatCyborg</name>
   </author>
   <entry>
+    <title>Ways to Display Tabular Data on iOS</title>
+    <link rel="alternate" href="/2013/12/04/ways-to-display-tabular-data-on-ios/"/>
+    <id>/2013/12/04/ways-to-display-tabular-data-on-ios/</id>
+    <published>2013-12-04T00:00:00Z</published>
+    <updated>2013-12-04T00:00:00Z</updated>
+    <author>
+      <name>CatCyborg</name>
+    </author>
+    <summary type="html">&lt;p&gt;Recently, I work on an iOS app that helps its users to learn stock trading through simulation. I discovered that numbers, charts and tabular data are the most commonly used on the user interface. &lt;/p&gt;
+
+&lt;p&gt;Well, that looks like quite a retarded discovery I&amp;#39;ve ever made...&lt;em&gt;but probably not really!&lt;/em&gt;&lt;/p&gt;
+</summary>
+    <content type="html">&lt;p&gt;Recently, I work on an iOS app that helps its users to learn stock trading through simulation. I discovered that numbers, charts and tabular data are the most commonly used on the user interface. &lt;/p&gt;
+
+&lt;p&gt;Well, that looks like quite a retarded discovery I&amp;#39;ve ever made...&lt;em&gt;but probably not really!&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;For the past 2 years, I worked on entertainment-related web/mobile apps. Usage of tiles and images are usually very prominent for this case, compare to the stock trading app.&lt;/p&gt;
+
+&lt;p&gt;In stock trading and other finance-related areas, displaying numbers in tables is very important. These numbers are used by traders to decide quickly whether they have to buy, sell, or do nothing with certain stocks. Traders rely on Ms Excel sheets everyday; Excel is one of the best tools for them. Using Excel, they can make charts from tables, and many more.&lt;/p&gt;
+
+&lt;p&gt;Then there are users who would like to learn to be traders. They need to get acquainted with these tools too. Numbers, tables, charts...&lt;/p&gt;
+
+&lt;h3&gt;What are all these things have to do with displaying tabular data on iOS?&lt;/h3&gt;
+
+&lt;p&gt;If let&amp;#39;s say we build an iOS app for these people, we do need to make sure it somewhat simulates the tools they are already familiar with. Tables in Excel are aligned, from column to rows.&lt;/p&gt;
+
+&lt;p&gt;How can we code nicely aligned numbers on iOS? How can we make their alignments and values easy to change when we need to?&lt;/p&gt;
+
+&lt;p&gt;For example, we want to display data that looks like the following.&lt;/p&gt;
+&lt;pre class="highlight text"&gt;
+
+  Stock Symbol: LNKD
+  Price Bought: USD 300
+ Current Price: USD 300
+      Quantity: 10
+
+&lt;/pre&gt;
+&lt;p&gt;There are at least three possible approaches to implement this kind of display on iOS.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Using Static Labels (&lt;a href="http://git.io/Hbjfmg"&gt;Code on GitHub&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Using Outlet Collections of Labels (&lt;a href="http://git.io/MK5ZZw"&gt;Code on GitHub&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Using Table View (&lt;a href="http://git.io/JJsNSg"&gt;Code on GitHub&lt;/a&gt;)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2&gt;Using Static Labels&lt;/h2&gt;
+
+&lt;p&gt;&lt;img title="Static Labels - Storyboard" alt="Static Labels - Storyboard" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-manual-alignments.png?1386201851" /&gt;&lt;/p&gt;
+
+&lt;p&gt;With this approach, number description labels are hardcoded, and number values are bound manually. All labels&amp;#39; coordinates are defined on storyboards/xibs, or perhaps hardcoded on the code.&lt;/p&gt;
+
+&lt;p&gt;&lt;img title="Static Labels - Storyboard" alt="Static Labels - Storyboard" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-hardcoded-bindings.png?1386201851" /&gt;&lt;/p&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="sr"&gt;//&lt;/span&gt; &lt;span class="no"&gt;SLViewController&lt;/span&gt;&lt;span class="nf"&gt;.m&lt;/span&gt;
+
+&lt;span class="c1"&gt;#import &amp;quot;SLViewController.h&amp;quot;&lt;/span&gt;
+
+&lt;span class="vi"&gt;@interface&lt;/span&gt; &lt;span class="no"&gt;SLViewController&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="vi"&gt;@property&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;weak&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nonatomic&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="no"&gt;IBOutlet&lt;/span&gt; &lt;span class="no"&gt;UILabel&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;symbolLabel&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="vi"&gt;@property&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;weak&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nonatomic&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="no"&gt;IBOutlet&lt;/span&gt; &lt;span class="no"&gt;UILabel&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;priceBoughtLabel&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="vi"&gt;@property&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;weak&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nonatomic&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="no"&gt;IBOutlet&lt;/span&gt; &lt;span class="no"&gt;UILabel&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;currentPriceLabel&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="vi"&gt;@property&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;weak&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nonatomic&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="no"&gt;IBOutlet&lt;/span&gt; &lt;span class="no"&gt;UILabel&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;quantityLabel&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="vi"&gt;@end&lt;/span&gt;
+
+&lt;span class="vi"&gt;@implementation&lt;/span&gt; &lt;span class="no"&gt;SLViewController&lt;/span&gt;
+
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;viewDidLoad&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="k"&gt;super&lt;/span&gt; &lt;span class="n"&gt;viewDidLoad&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="sr"&gt;//&lt;/span&gt; &lt;span class="no"&gt;Hardcoded&lt;/span&gt; &lt;span class="nb"&gt;binding&lt;/span&gt;
+    &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.symbolLabel.text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;RKUNF&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.priceBoughtLabel.text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;USD 15.75&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.currentPriceLabel.text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;USD 14.98&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.quantityLabel.text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;100&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="vi"&gt;@end&lt;/span&gt;
+
+&lt;/pre&gt;
+&lt;p&gt;&lt;img title="Static Labels - iOS Simulator" alt="Static Labels - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-on-simulator.png?1386201851" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;This is the first approach that probably most iOS developers can think of. Very nice for building prototypes or quickly hack something.&lt;/li&gt;
+&lt;li&gt;Easy to implement at first, for very small set of labels&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Aligning labels are done manually.&lt;/strong&gt; Wow, that&amp;#39;s hard and tedious. As you can see from the screenshots above, the alignments don&amp;#39;t look quite right.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Adding or removing labels requires aligning labels manually.&lt;/strong&gt; Lots of manual work here. If there is not enough space, rearranging all the labels is necessary. Try adding a new row for &lt;code&gt;Profit/Loss: -USD 77&lt;/code&gt;, and see how long you spend to align the labels.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;UI and data binding is hardcoded.&lt;/strong&gt; If you add &lt;code&gt;Profit/Loss: -USD 77&lt;/code&gt; as a new row, most chances are that you will add two UILabel, one for &lt;code&gt;Profit/Loss:&lt;/code&gt; and &lt;code&gt;-USD 77&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;When there are set of similar data to be displayed, there is tendency to duplicate the codes and the labels&lt;/strong&gt;. This is because sharing same set of data requires more typing than copying and pasting labels with existing alignment.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href="http://git.io/Hbjfmg"&gt;Feel free to download the code from GitHub.&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2&gt;Using Outlet Collections of Labels&lt;/h2&gt;
+
+&lt;p&gt;&lt;img title="Outlet Collections of Labels - Manual Alignments" alt="Outlet Collections of Labels - Manual Alignments" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-manual-alignments.png?1386201851" /&gt;&lt;/p&gt;
+
+&lt;p&gt;With this approach, number description labels are not hardcoded, and number values are bound dynamically. However, all the labels&amp;#39; positions are defined on storyboards/xibs, or perhaps hardcoded on the code. Overall, this is a slightly more dynamic approach than using static labels.&lt;/p&gt;
+
+&lt;p&gt;&lt;img title="Outlet Collections of Labels - Dynamic Bindings" alt="Outlet Collections of Labels - Dynamic Bindings" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-dynamic-bindings.png?1386201851" /&gt;&lt;/p&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="sr"&gt;//&lt;/span&gt; &lt;span class="no"&gt;OCViewController&lt;/span&gt;
+
+&lt;span class="c1"&gt;#import &amp;quot;OCViewController.h&amp;quot;&lt;/span&gt;
+
+&lt;span class="vi"&gt;@interface&lt;/span&gt; &lt;span class="no"&gt;OCViewController&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="vi"&gt;@property&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;strong&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nonatomic&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="no"&gt;IBOutletCollection&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;UILabel&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="no"&gt;NSArray&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;nameLabels&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="vi"&gt;@property&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;strong&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nonatomic&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="no"&gt;IBOutletCollection&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;UILabel&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="no"&gt;NSArray&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;valueLabels&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="vi"&gt;@end&lt;/span&gt;
+
+&lt;span class="vi"&gt;@implementation&lt;/span&gt; &lt;span class="no"&gt;OCViewController&lt;/span&gt;
+
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;viewDidLoad&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="k"&gt;super&lt;/span&gt; &lt;span class="n"&gt;viewDidLoad&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="sr"&gt;//&lt;/span&gt; &lt;span class="no"&gt;Names&lt;/span&gt; &lt;span class="n"&gt;and&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt; &lt;span class="n"&gt;are&lt;/span&gt; &lt;span class="n"&gt;easily&lt;/span&gt; &lt;span class="n"&gt;modifiable&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+    &lt;span class="no"&gt;NSArray&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;names&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Symbol =&amp;gt; &amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Bought =&amp;gt; &amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Current =&amp;gt; &amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Qty =&amp;gt; &amp;quot;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="no"&gt;NSArray&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;LNKD&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;USD 350&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;USD 300&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;80&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;NSInteger&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;names&lt;/span&gt;&lt;span class="nf"&gt;.count&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;UILabel&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.nameLabels&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="n"&gt;setText&lt;/span&gt;&lt;span class="ss"&gt;:names&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;]]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;UILabel&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.valueLabels&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="n"&gt;setText&lt;/span&gt;&lt;span class="ss"&gt;:values&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;]]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="vi"&gt;@end&lt;/span&gt;
+
+&lt;/pre&gt;
+&lt;p&gt;&lt;img title="Outlet Collections of Labels - iOS Simulator" alt="Outlet Collections of Labels - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-on-simulator.png?1386201851" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Changing labels only requires changing the code (the name and value arrays)&lt;/strong&gt;; storyboards/xibs don&amp;#39;t need to be modified.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Sharing similar set of row data is a little bit easier than the static labels approach.&lt;/strong&gt; Imagine if you have similar kind of table somewhere and you want to use the same calculations for the values.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Aligning labels are still done manually.&lt;/strong&gt; Good luck with that!&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Adding or removing labels still requires aligning labels manually.&lt;/strong&gt; If there is not enough space, you will need to rearrange all the labels by hand again...&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;When there are set of similar data to be displayed, there is tendency to duplicate the labels&lt;/strong&gt;. Notice that it&amp;#39;s a little bit cleaner here than in the previous way; here there&amp;#39;s less tendency to copy the codes...but duplicating the labels is still pretty bad, especially if there&amp;#39;s a way not to do so.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href="http://git.io/MK5ZZw"&gt;Feel free to download the code from GitHub.&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2&gt;Using Table View&lt;/h2&gt;
+
+&lt;p&gt;&lt;img title="Table View" alt="Table View" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view.png?1386201851" /&gt;&lt;/p&gt;
+
+&lt;p&gt;In this approach, we view each row as a UITableViewCell that has a left label and a right label. The left and right label data are stored in a 2d array of row name and value pairs. This is so far the most flexible way, compare to the other two approaches.&lt;/p&gt;
+
+&lt;p&gt;&lt;img title="Table View - Dynamic Bindings" alt="Table View - Dynamic Bindings" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-dynamic-bindings.png?1386201851" /&gt;&lt;/p&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="sr"&gt;//&lt;/span&gt; &lt;span class="no"&gt;TVViewController&lt;/span&gt;&lt;span class="nf"&gt;.m&lt;/span&gt;
+
+&lt;span class="c1"&gt;#import &amp;quot;TVRowTableViewCell.h&amp;quot;&lt;/span&gt;
+&lt;span class="c1"&gt;#import &amp;quot;TVViewController.h&amp;quot;&lt;/span&gt;
+
+&lt;span class="vi"&gt;@interface&lt;/span&gt; &lt;span class="no"&gt;TVViewController&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;
+    &lt;span class="no"&gt;UITableViewDataSource&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="no"&gt;UITableViewDelegate&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="vi"&gt;@property&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;weak&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nonatomic&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="no"&gt;IBOutlet&lt;/span&gt; &lt;span class="no"&gt;UITableView&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;tableView&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="vi"&gt;@end&lt;/span&gt;
+
+&lt;span class="vi"&gt;@implementation&lt;/span&gt; &lt;span class="no"&gt;TVViewController&lt;/span&gt;
+
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;viewDidLoad&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="k"&gt;super&lt;/span&gt; &lt;span class="n"&gt;viewDidLoad&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.tableData&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;
+                       &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;
+                         &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Stock Symbol:&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;LNKD&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                         &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Price Bought:&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;USD 300&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                         &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Current Price:&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;USD 300&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                         &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Quantity:&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;10&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+                        &lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                       &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;
+                         &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Profit/Loss:&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;0&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                         &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;ROI:&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;0%&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+                        &lt;span class="o"&gt;]&lt;/span&gt;
+                      &lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="sr"&gt;//&lt;/span&gt; &lt;span class="n"&gt;dummy&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="c1"&gt;#pragma mark - UITableViewDataSource&lt;/span&gt;
+
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;NSInteger&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;numberOfSectionsInTableView&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="no"&gt;UITableView&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;tableView&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.tableData.count&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;NSInteger&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;tableView&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="no"&gt;UITableView&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;tableView&lt;/span&gt; &lt;span class="n"&gt;numberOfRowsInSection&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="no"&gt;NSInteger&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;section&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.tableData&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;section&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;UITableViewCell&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;tableView&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="no"&gt;UITableView&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;tableView&lt;/span&gt; &lt;span class="n"&gt;cellForRowAtIndexPath&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="no"&gt;NSIndexPath&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;indexPath&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;static&lt;/span&gt; &lt;span class="no"&gt;NSString&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;cellIdentifier&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;TVRowTableViewCell&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="no"&gt;TVRowTableViewCell&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;cell&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;tableView&lt;/span&gt; &lt;span class="n"&gt;dequeueReusableCellWithIdentifier&lt;/span&gt;&lt;span class="ss"&gt;:cellIdentifier&lt;/span&gt; &lt;span class="n"&gt;forIndexPath&lt;/span&gt;&lt;span class="ss"&gt;:indexPath&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;cell&lt;/span&gt; &lt;span class="n"&gt;bindRowData&lt;/span&gt;&lt;span class="ss"&gt;:self&lt;/span&gt;&lt;span class="nf"&gt;.tableData&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;indexPath&lt;/span&gt;&lt;span class="nf"&gt;.section&lt;/span&gt;&lt;span class="o"&gt;][&lt;/span&gt;&lt;span class="n"&gt;indexPath&lt;/span&gt;&lt;span class="nf"&gt;.row&lt;/span&gt;&lt;span class="o"&gt;]]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;cell&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="c1"&gt;#pragma mark - UITableViewDelegate&lt;/span&gt;
+
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;UIView&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;tableView&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="no"&gt;UITableView&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;tableView&lt;/span&gt; &lt;span class="n"&gt;viewForFooterInSection&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="no"&gt;NSInteger&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;section&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="o"&gt;[[&lt;/span&gt;&lt;span class="no"&gt;UIView&lt;/span&gt; &lt;span class="n"&gt;alloc&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="n"&gt;initWithFrame&lt;/span&gt;&lt;span class="ss"&gt;:CGRectZero&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="vi"&gt;@end&lt;/span&gt;
+
+&lt;/pre&gt;
+&lt;p&gt;&lt;img title="Table View - Row" alt="Table View - Row" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-row.png?1386201851" /&gt;&lt;/p&gt;
+&lt;pre class="highlight ruby"&gt;&lt;span class="sr"&gt;//&lt;/span&gt; &lt;span class="no"&gt;TVRowTableViewCell&lt;/span&gt;&lt;span class="nf"&gt;.m&lt;/span&gt;
+
+&lt;span class="c1"&gt;#import &amp;quot;TVRowTableViewCell.h&amp;quot;&lt;/span&gt;
+
+&lt;span class="vi"&gt;@implementation&lt;/span&gt; &lt;span class="no"&gt;TVRowTableViewCell&lt;/span&gt;
+
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;bindRowData&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="no"&gt;NSArray&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;rowData&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.leftLabel.text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rowData&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.rightLabel.text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rowData&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="vi"&gt;@end&lt;/span&gt;
+
+&lt;/pre&gt;
+&lt;p&gt;&lt;img title="Table View - iOS Simulator" alt="Table View - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-on-simulator.png?1386201851" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Align the cell once, and its alignment is applied for the rest of the table rows.&lt;/strong&gt; Compare this to the previous two approaches where you have to align all labels manually.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Adding more name value pairs only requires code change&lt;/strong&gt;; storyboard/xib changes are not required.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;There is less tendency to copy-paste labels than the previous two approaches.&lt;/strong&gt; When you need to display this thing elsewhere, similar data -&amp;gt; Can share data+calculation at least&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;This approach gives the least number among the possible three approaches&lt;/strong&gt; if there are plenty of name value pairs (&amp;gt; 5).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Cons:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;It takes some time to setup the table view and cell.&lt;/strong&gt; However, this is one-time setup for all rows, so...it&amp;#39;s not so bad.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;This is probably not the first approach iOS developers can think of.&lt;/strong&gt; This pattern is more common in JavaScript chart libraries; you &amp;quot;plug&amp;quot; 2d arrays of table data to display a fancy chart or table.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href="http://git.io/JJsNSg"&gt;Feel free to download the code from GitHub.&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;Those are the three ways I can think of. While there are pros and cons for each of the approaches, I prefer using the table view.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
     <title>4 Tips to Build Fast Websites</title>
-    <link rel="alternate" href="/2013/07/09/5-tips-to-build-fast-websites/"/>
-    <id>/2013/07/09/5-tips-to-build-fast-websites/</id>
+    <link rel="alternate" href="/2013/07/09/4-tips-to-build-fast-websites/"/>
+    <id>/2013/07/09/4-tips-to-build-fast-websites/</id>
     <published>2013-07-09T00:00:00Z</published>
     <updated>2013-07-09T00:00:00Z</updated>
     <author>
@@ -275,11 +529,11 @@
 
 &lt;p&gt;Bored with using solid colors on backgrounds? Try using patterns. I did. It might work. There are free and gorgeous stuff like in &lt;a href="http://subtlepatterns.com/"&gt;Subtle Patterns&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Subtle Patterns" alt="Subtle Patterns" src="/images/subtle-patterns.png?1379001304" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Subtle Patterns" alt="Subtle Patterns" src="/images/subtle-patterns.png?1386201851" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Another choice is to use &lt;a href="http://www.noisetexturegenerator.com/"&gt;Noise Texture Generator&lt;/a&gt; for really small image size. This is useful for replacing your solid color to be slightly different.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Noise Texture Generator" alt="Noise Texture Generator" src="/images/noise-texture-generator.png?1379001304" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Noise Texture Generator" alt="Noise Texture Generator" src="/images/noise-texture-generator.png?1386201851" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Blurred background photos are another option, but I find they are too big and can make web pages slow.&lt;/p&gt;
 
@@ -297,7 +551,7 @@
 
 &lt;p&gt;&lt;a href="https://developers.google.com/speed/pagespeed/"&gt;Google PageSpeed&lt;/a&gt; is very simple to use. &lt;a href="https://developers.google.com/speed/pagespeed/"&gt;Visit the site&lt;/a&gt;, then follow its suggestions, especially the high priority ones. Once the high priority stuff is solved, page score can be significantly high. It is that simple.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Google PageSpeed" alt="Google PageSpeed" src="/images/pagespeed.png?1379001304" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Google PageSpeed" alt="Google PageSpeed" src="/images/pagespeed.png?1386201851" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Most of the time, I get better score when I use flat design and zero images (no background images, at least). With that, I am going back to trying to understand color theory and typography. Both concepts are enough to make sites looking good with fast speed.&lt;/p&gt;
 
@@ -434,39 +688,6 @@ EXEC
 &lt;p&gt;&lt;a href="http://middlemanapp.com/"&gt;Middleman&lt;/a&gt; is amazingly lightweight and front-end friendly. The initially generated template is so simple that it works immediately, and anyone can customize it quickly. It comes with &lt;a href="http://middlemanapp.com/asset-pipeline/"&gt;asset pipeline&lt;/a&gt; by default, so it is just a few configs and a command line away to &lt;a href="http://middlemanapp.com/advanced/file-size-optimization/"&gt;minify assets, compress image&lt;/a&gt;, and even &lt;a href="http://middlemanapp.com/minify-html/"&gt;minify HTML&lt;/a&gt;. The documentation is pretty short as well. Unfortunately, Middleman doesn&amp;#39;t have as many plugins as Jekyll. There is no deploy script available by default, and GitHub does not support hosting site organized with Middleman as it is. So, if you want to deploy Middleman-generated site, you need &lt;a href="https://github.com/tvaughan/middleman-deploy"&gt;middleman-deploy&lt;/a&gt;. Also, unfortunately, Middleman&amp;#39;s folder structure can be more disorganized than Jekyll.&lt;/p&gt;
 
 &lt;p&gt;Both &lt;a href="https://github.com/mojombo/jekyll"&gt;Jekyll&lt;/a&gt; and &lt;a href="http://middlemanapp.com/"&gt;Middleman&lt;/a&gt; are really really cool. You should try both and pick what you like.&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Learning Design</title>
-    <link rel="alternate" href="/2013/01/30/learning-design/"/>
-    <id>/2013/01/30/learning-design/</id>
-    <published>2013-01-30T00:00:00Z</published>
-    <updated>2013-01-30T00:00:00Z</updated>
-    <author>
-      <name>CatCyborg</name>
-    </author>
-    <summary type="html">&lt;p&gt;For the past two years, I have been dealing with implementing designs for iOS apps or web apps.
-I sometimes wonder how designers or front end developers can create cool-looking buttons, or create
-good-looking responsive websites.&lt;/p&gt;
-
-&lt;p&gt;I found these two small-but-concise books are really really great answers to my questions.&lt;/p&gt;
-</summary>
-    <content type="html">&lt;p&gt;For the past two years, I have been dealing with implementing designs for iOS apps or web apps.
-I sometimes wonder how designers or front end developers can create cool-looking buttons, or create
-good-looking responsive websites.&lt;/p&gt;
-
-&lt;p&gt;I found these two small-but-concise books are really really great answers to my questions.
-I don&amp;#39;t usually finish books, but for me, it took half a week to finish these.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="http://nathanbarry.com/webapps/"&gt;Designing Web Applications&lt;/a&gt; by &lt;a href="http://nathanbarry.com"&gt;Nathan Barry&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="http://www.abookapart.com/products/responsive-web-design"&gt;Responsive Web Design&lt;/a&gt; by &lt;a href="http://ethanmarcotte.com/"&gt;Ethan Marcotte&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;There are other related books that I still plan to grasp, like &lt;a href="http://www.abookapart.com/products/complete-library"&gt;A Book Apart Full Bundle&lt;/a&gt; and &lt;a href="https://peepcode.com/products/design-bundle"&gt;PeepCode&amp;#39;s Design Bundle&lt;/a&gt;.
-Also, I have been trying to understand &lt;a href="http://www.smashingmagazine.com/2010/01/28/color-theory-for-designers-part-1-the-meaning-of-color/"&gt;color theory&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;I don&amp;#39;t think I have &amp;#39;good eyes&amp;#39;, but I&amp;#39;ll keep trying to find how much understanding I&amp;#39;ll be happy with.&lt;/p&gt;
 </content>
   </entry>
 </feed>
