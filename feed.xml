@@ -57,11 +57,11 @@
 
 &lt;h2&gt;Using Static Labels&lt;/h2&gt;
 
-&lt;p&gt;&lt;img title="Static Labels - Storyboard" alt="Static Labels - Storyboard" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-manual-alignments.png?1386201851" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Static Labels - Storyboard" alt="Static Labels - Storyboard" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-manual-alignments.png?1406982089" /&gt;&lt;/p&gt;
 
 &lt;p&gt;With this approach, number description labels are hardcoded, and number values are bound manually. All labels&amp;#39; coordinates are defined on storyboards/xibs, or perhaps hardcoded on the code.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Static Labels - Storyboard" alt="Static Labels - Storyboard" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-hardcoded-bindings.png?1386201851" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Static Labels - Storyboard" alt="Static Labels - Storyboard" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-hardcoded-bindings.png?1406982089" /&gt;&lt;/p&gt;
 &lt;pre class="highlight ruby"&gt;&lt;span class="sr"&gt;//&lt;/span&gt; &lt;span class="no"&gt;SLViewController&lt;/span&gt;&lt;span class="nf"&gt;.m&lt;/span&gt;
 
 &lt;span class="c1"&gt;#import &amp;quot;SLViewController.h&amp;quot;&lt;/span&gt;
@@ -88,7 +88,7 @@
 &lt;span class="vi"&gt;@end&lt;/span&gt;
 
 &lt;/pre&gt;
-&lt;p&gt;&lt;img title="Static Labels - iOS Simulator" alt="Static Labels - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-on-simulator.png?1386201851" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Static Labels - iOS Simulator" alt="Static Labels - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-on-simulator.png?1406982089" /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
 
@@ -110,11 +110,11 @@
 
 &lt;h2&gt;Using Outlet Collections of Labels&lt;/h2&gt;
 
-&lt;p&gt;&lt;img title="Outlet Collections of Labels - Manual Alignments" alt="Outlet Collections of Labels - Manual Alignments" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-manual-alignments.png?1386201851" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Outlet Collections of Labels - Manual Alignments" alt="Outlet Collections of Labels - Manual Alignments" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-manual-alignments.png?1406982089" /&gt;&lt;/p&gt;
 
 &lt;p&gt;With this approach, number description labels are not hardcoded, and number values are bound dynamically. However, all the labels&amp;#39; positions are defined on storyboards/xibs, or perhaps hardcoded on the code. Overall, this is a slightly more dynamic approach than using static labels.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Outlet Collections of Labels - Dynamic Bindings" alt="Outlet Collections of Labels - Dynamic Bindings" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-dynamic-bindings.png?1386201851" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Outlet Collections of Labels - Dynamic Bindings" alt="Outlet Collections of Labels - Dynamic Bindings" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-dynamic-bindings.png?1406982089" /&gt;&lt;/p&gt;
 &lt;pre class="highlight ruby"&gt;&lt;span class="sr"&gt;//&lt;/span&gt; &lt;span class="no"&gt;OCViewController&lt;/span&gt;
 
 &lt;span class="c1"&gt;#import &amp;quot;OCViewController.h&amp;quot;&lt;/span&gt;
@@ -141,7 +141,7 @@
 &lt;span class="vi"&gt;@end&lt;/span&gt;
 
 &lt;/pre&gt;
-&lt;p&gt;&lt;img title="Outlet Collections of Labels - iOS Simulator" alt="Outlet Collections of Labels - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-on-simulator.png?1386201851" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Outlet Collections of Labels - iOS Simulator" alt="Outlet Collections of Labels - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-on-simulator.png?1406982089" /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
 
@@ -162,11 +162,11 @@
 
 &lt;h2&gt;Using Table View&lt;/h2&gt;
 
-&lt;p&gt;&lt;img title="Table View" alt="Table View" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view.png?1386201851" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Table View" alt="Table View" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view.png?1406982089" /&gt;&lt;/p&gt;
 
 &lt;p&gt;In this approach, we view each row as a UITableViewCell that has a left label and a right label. The left and right label data are stored in a 2d array of row name and value pairs. This is so far the most flexible way, compare to the other two approaches.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Table View - Dynamic Bindings" alt="Table View - Dynamic Bindings" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-dynamic-bindings.png?1386201851" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Table View - Dynamic Bindings" alt="Table View - Dynamic Bindings" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-dynamic-bindings.png?1406982089" /&gt;&lt;/p&gt;
 &lt;pre class="highlight ruby"&gt;&lt;span class="sr"&gt;//&lt;/span&gt; &lt;span class="no"&gt;TVViewController&lt;/span&gt;&lt;span class="nf"&gt;.m&lt;/span&gt;
 
 &lt;span class="c1"&gt;#import &amp;quot;TVRowTableViewCell.h&amp;quot;&lt;/span&gt;
@@ -223,7 +223,7 @@
 &lt;span class="vi"&gt;@end&lt;/span&gt;
 
 &lt;/pre&gt;
-&lt;p&gt;&lt;img title="Table View - Row" alt="Table View - Row" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-row.png?1386201851" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Table View - Row" alt="Table View - Row" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-row.png?1406982089" /&gt;&lt;/p&gt;
 &lt;pre class="highlight ruby"&gt;&lt;span class="sr"&gt;//&lt;/span&gt; &lt;span class="no"&gt;TVRowTableViewCell&lt;/span&gt;&lt;span class="nf"&gt;.m&lt;/span&gt;
 
 &lt;span class="c1"&gt;#import &amp;quot;TVRowTableViewCell.h&amp;quot;&lt;/span&gt;
@@ -238,7 +238,7 @@
 &lt;span class="vi"&gt;@end&lt;/span&gt;
 
 &lt;/pre&gt;
-&lt;p&gt;&lt;img title="Table View - iOS Simulator" alt="Table View - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-on-simulator.png?1386201851" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Table View - iOS Simulator" alt="Table View - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-on-simulator.png?1406982089" /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
 
@@ -529,11 +529,11 @@
 
 &lt;p&gt;Bored with using solid colors on backgrounds? Try using patterns. I did. It might work. There are free and gorgeous stuff like in &lt;a href="http://subtlepatterns.com/"&gt;Subtle Patterns&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Subtle Patterns" alt="Subtle Patterns" src="/images/subtle-patterns.png?1386201851" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Subtle Patterns" alt="Subtle Patterns" src="/images/subtle-patterns.png?1406982089" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Another choice is to use &lt;a href="http://www.noisetexturegenerator.com/"&gt;Noise Texture Generator&lt;/a&gt; for really small image size. This is useful for replacing your solid color to be slightly different.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Noise Texture Generator" alt="Noise Texture Generator" src="/images/noise-texture-generator.png?1386201851" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Noise Texture Generator" alt="Noise Texture Generator" src="/images/noise-texture-generator.png?1406982089" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Blurred background photos are another option, but I find they are too big and can make web pages slow.&lt;/p&gt;
 
@@ -551,7 +551,7 @@
 
 &lt;p&gt;&lt;a href="https://developers.google.com/speed/pagespeed/"&gt;Google PageSpeed&lt;/a&gt; is very simple to use. &lt;a href="https://developers.google.com/speed/pagespeed/"&gt;Visit the site&lt;/a&gt;, then follow its suggestions, especially the high priority ones. Once the high priority stuff is solved, page score can be significantly high. It is that simple.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Google PageSpeed" alt="Google PageSpeed" src="/images/pagespeed.png?1386201851" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Google PageSpeed" alt="Google PageSpeed" src="/images/pagespeed.png?1406982089" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Most of the time, I get better score when I use flat design and zero images (no background images, at least). With that, I am going back to trying to understand color theory and typography. Both concepts are enough to make sites looking good with fast speed.&lt;/p&gt;
 
