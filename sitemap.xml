@@ -2,12 +2,10 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    
     <title>CatCyb.org Logs</title>
     <meta http-equiv='X-UA-Compatible' content='IE=edge;chrome=1' />
     <meta content='width=device-width' name='viewport' />
-    <link href='http://fonts.googleapis.com/css?family=EB+Garamond' rel='stylesheet' type='text/css'>
-    <link type="text/css" media="screen" href="/stylesheets/app.css?1406982089" rel="stylesheet" />
+    <link type="text/css" media="screen" href="/stylesheets/app.css?1407826163" rel="stylesheet" />
   </head>
   <body>
     <div id="header">
@@ -15,68 +13,71 @@
     </div>
     
     <div id="main" role="main">
-      
-      
       <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>http://nyan.catcyb.org/</loc>
     <priority>0.7</priority>
-    <lastmod>2014-08-02T00:00:00+08:00</lastmod>
+    <lastmod>2014-08-12T00:00:00+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>/2014/08/03/rolling-your-own-loading-indicator-using-core-animation/</loc>
+    <priority>0.7</priority>
+    <lastmod>2014-08-03T08:00:00+08:00</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>/2013/12/04/ways-to-display-tabular-data-on-ios/</loc>
     <priority>0.7</priority>
-    <lastmod>2013-12-04T00:00:00Z</lastmod>
+    <lastmod>2013-12-04T08:00:00+08:00</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>/2013/07/09/4-tips-to-build-fast-websites/</loc>
     <priority>0.7</priority>
-    <lastmod>2013-07-09T00:00:00Z</lastmod>
+    <lastmod>2013-07-09T08:00:00+08:00</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>/2013/05/09/my-stages-of-studying-web-design/</loc>
     <priority>0.7</priority>
-    <lastmod>2013-05-09T00:00:00Z</lastmod>
+    <lastmod>2013-05-09T08:00:00+08:00</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>/2013/03/15/extending-sets-in-redis/</loc>
     <priority>0.7</priority>
-    <lastmod>2013-03-15T00:00:00Z</lastmod>
+    <lastmod>2013-03-15T08:00:00+08:00</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>/2013/03/14/playing-with-pagespeed/</loc>
     <priority>0.7</priority>
-    <lastmod>2013-03-14T00:00:00Z</lastmod>
+    <lastmod>2013-03-14T08:00:00+08:00</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>/2013/03/05/middleman-or-jekyll/</loc>
     <priority>0.7</priority>
-    <lastmod>2013-03-05T00:00:00Z</lastmod>
+    <lastmod>2013-03-05T08:00:00+08:00</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>/2013/01/30/learning-design/</loc>
     <priority>0.7</priority>
-    <lastmod>2013-01-30T00:00:00Z</lastmod>
+    <lastmod>2013-01-30T08:00:00+08:00</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>/2013/01/30/activities-on-spare-time/</loc>
     <priority>0.7</priority>
-    <lastmod>2013-01-30T00:00:00Z</lastmod>
+    <lastmod>2013-01-30T08:00:00+08:00</lastmod>
     <changefreq>weekly</changefreq>
   </url>
 </urlset>
 
     </div>
-    
 
     <div id="footer">
       <p><a href="/">CatCyb.org Logs</a>, themed by <a href="http://catcyb.org">CatCyb.org</a>, powered by <a href="http://middlemanapp.com/">Middleman</a></p>

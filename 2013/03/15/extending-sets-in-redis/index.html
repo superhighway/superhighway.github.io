@@ -1,32 +1,55 @@
-<!doctype html> <html> <head> <meta charset=utf-8 /> <title>Extending Sets in Redis | CatCyb.org Logs</title> <meta http-equiv=X-UA-Compatible content='IE=edge;chrome=1'/> <meta content='width=device-width' name=viewport /> <link href='//fonts.googleapis.com/css?family=EB+Garamond' rel=stylesheet> <link media=screen href="/stylesheets/app.css?1406982090" rel=stylesheet /> </head> <body> <div id=header> <h1><a href="/">CatCyb.org Logs</a><span class=no-w480>, written</span> by <a href="/about">an Engineer</a></h1> </div> <div id=main role=main> <h1>Extending Sets in Redis</h1> <p class=article-meta> written on Mar 15, 2013 / <a href="/tags/data/">data</a>, <a href="/tags/tools/">tools</a> </p> <p>I seem to encounter some patterns where I need to have Hash data structure in Redis. I sometimes need their values as a list or a set.</p> <pre class="highlight ruby"><span class="c1"># ruby</span>
+<!doctype html> <html> <head> <meta charset=utf-8 /> <title>Extending Sets in Redis | CatCyb.org Logs</title> <meta http-equiv=X-UA-Compatible content='IE=edge;chrome=1'/> <meta content='width=device-width' name=viewport /> <link media=screen href="/stylesheets/app.css?1407826163" rel=stylesheet /> </head> <body> <div id=header> <h1><a href="/">CatCyb.org Logs</a><span class=no-w480>, written</span> by <a href="/about">an Engineer</a></h1> </div> <div id=main role=main> <h1>Extending Sets in Redis</h1> <p class=article-meta> written on Mar 15, 2013 / <a href="/tags/data/">data</a>, <a href="/tags/tools/">tools</a> </p> <p>I seem to encounter some patterns where I need to have Hash data structure in Redis. I sometimes need their values as a list or a set.</p> <div class="highlight ruby"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class=lineno>1
+2
+3
+4
+5</pre></td><td class=code><pre><span class="c1"># ruby</span>
 <span class="nb">hash</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="ss">cheez: </span><span class="o">[</span><span class="s1">&#39;burger&#39;</span><span class="o">]</span><span class="p">,</span>
-  <span class="ss">hello: </span><span class="no">Set</span><span class="nf">.new</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="s1">&#39;yay&#39;</span><span class="o">]</span><span class="p">)</span>
+  <span class="ss">cheez: </span><span class="p">[</span><span class="s1">'burger'</span><span class="p">],</span>
+  <span class="ss">hello: </span><span class="no">Set</span><span class="p">.</span><span class="nf">new</span><span class="p">([</span><span class="s1">'world'</span><span class="p">,</span> <span class="s1">'yay'</span><span class="p">])</span>
 <span class="p">}</span>
-</pre> <p>Hash in Redis does not support the above structure by default. However, by using Set and another data structure, we can simulate it.</p> <h2>First Approach</h2> <p>First, we are going to implement naive approach like below.</p> <pre class="highlight text">HSET &quot;hash&quot;, &quot;cheez&quot;, &quot;burger&quot;
-HSET &quot;hash&quot;, &quot;hello&quot;, &quot;world,yay&quot;
-</pre> <p>Alright, those can solve our problem here but... we need hack for the above structure to work. </p> <p>Let&#39;s look at <code>cheez</code>. Imagine we will have array of values of <code>&quot;cheez&quot;</code>, then we need long comma-separated values for that. Ok, maybe we can use JSON, but again, it&#39;s another hack just to parse the stored JSON. And those are not including some concurrency issues that might appear someday...</p> <p>Now, let&#39;s check <code>hello</code>. It has the same problems with <code>cheez</code>, but with an addition. Anytime we need to add a new value, we need to make sure the added value does not exist in existing list.</p> <h2>An Extensible Approach Using Sets</h2> <p>Let&#39;s go back to definition of Hash in Ruby. Hash contains arbitrary key and value pairs, and the keys are unique. In other words, we can represent Hash keys in Ruby as one Set in Redis.</p> <pre class="highlight text">SADD &quot;hash&quot;, &quot;cheez&quot;
-SADD &quot;hash&quot;, &quot;hello&quot;
+</pre></td></tr></tbody></table> </div> <p>Hash in Redis does not support the above structure by default. However, by using Set and another data structure, we can simulate it.</p> <h2>First Approach</h2> <p>First, we are going to implement naive approach like below.</p> <div class="highlight plaintext"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class=lineno>1
+2</pre></td><td class=code><pre>HSET "hash", "cheez", "burger"
+HSET "hash", "hello", "world,yay"
+</pre></td></tr></tbody></table> </div> <p>Alright, those can solve our problem here but... we need hack for the above structure to work. </p> <p>Let&#39;s look at <code>cheez</code>. Imagine we will have array of values of <code>&quot;cheez&quot;</code>, then we need long comma-separated values for that. Ok, maybe we can use JSON, but again, it&#39;s another hack just to parse the stored JSON. And those are not including some concurrency issues that might appear someday...</p> <p>Now, let&#39;s check <code>hello</code>. It has the same problems with <code>cheez</code>, but with an addition. Anytime we need to add a new value, we need to make sure the added value does not exist in existing list.</p> <h2>An Extensible Approach Using Sets</h2> <p>Let&#39;s go back to definition of Hash in Ruby. Hash contains arbitrary key and value pairs, and the keys are unique. In other words, we can represent Hash keys in Ruby as one Set in Redis.</p> <div class="highlight plaintext"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class=lineno>1
+2
+3
+4
+5
+6</pre></td><td class=code><pre>SADD "hash", "cheez"
+SADD "hash", "hello"
 
-RPUSH &quot;hash::cheez&quot;, &quot;burger&quot;
-SADD &quot;hash::hello&quot;, &quot;world&quot;
-SADD &quot;hash::hello&quot;, &quot;yay&quot;
-</pre> <p>So, what we did was storing Hash keys in Redis set, then we store the values using another Redis data structure. Not so bad, eh?</p> <p>This approach looks complete. Though, sometimes we do need to care a bit about concurrent access and modification, especially when later on you want to change or delete the <code>hash</code> often.</p> <h2>Ensuring Atomic Operation</h2> <p>This step is not necessary if your app does not need the above stuff as atomic operation.</p> <p>Let&#39;s step back a bit. This is what we want.</p> <pre class="highlight ruby"><span class="c1"># ruby</span>
+RPUSH "hash::cheez", "burger"
+SADD "hash::hello", "world"
+SADD "hash::hello", "yay"
+</pre></td></tr></tbody></table> </div> <p>So, what we did was storing Hash keys in Redis set, then we store the values using another Redis data structure. Not so bad, eh?</p> <p>This approach looks complete. Though, sometimes we do need to care a bit about concurrent access and modification, especially when later on you want to change or delete the <code>hash</code> often.</p> <h2>Ensuring Atomic Operation</h2> <p>This step is not necessary if your app does not need the above stuff as atomic operation.</p> <p>Let&#39;s step back a bit. This is what we want.</p> <div class="highlight ruby"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class=lineno>1
+2
+3
+4
+5</pre></td><td class=code><pre><span class="c1"># ruby</span>
 <span class="nb">hash</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="ss">cheez: </span><span class="o">[</span><span class="s1">&#39;burger&#39;</span><span class="o">]</span><span class="p">,</span>
-  <span class="ss">hello: </span><span class="no">Set</span><span class="nf">.new</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="s1">&#39;yay&#39;</span><span class="o">]</span><span class="p">)</span>
+  <span class="ss">cheez: </span><span class="p">[</span><span class="s1">'burger'</span><span class="p">],</span>
+  <span class="ss">hello: </span><span class="no">Set</span><span class="p">.</span><span class="nf">new</span><span class="p">([</span><span class="s1">'world'</span><span class="p">,</span> <span class="s1">'yay'</span><span class="p">])</span>
 <span class="p">}</span>
-</pre> <p>Anytime you set key-value pair to hash, you want it to be (as if) one batch of operation. To make multiple commands work as one unit, use multi/exec.</p> <pre class="highlight text">MULTI
-SADD &quot;hash&quot;, &quot;cheez&quot;
-LADD &quot;hash::cheez&quot;, &quot;burger&quot;
+</pre></td></tr></tbody></table> </div> <p>Anytime you set key-value pair to hash, you want it to be (as if) one batch of operation. To make multiple commands work as one unit, use multi/exec.</p> <div class="highlight plaintext"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class=lineno>1
+2
+3
+4
+5
+6
+7
+8
+9
+10</pre></td><td class=code><pre>MULTI
+SADD "hash", "cheez"
+LADD "hash::cheez", "burger"
 EXEC
 
 MULTI
-SADD &quot;hash&quot;, &quot;hello&quot;
-SADD &quot;hash::hello&quot;, &quot;world&quot;
-SADD &quot;hash::hello&quot;, &quot;yay&quot;
+SADD "hash", "hello"
+SADD "hash::hello", "world"
+SADD "hash::hello", "yay"
 EXEC
-</pre> <p>There is another term called pipelining, which is similar to multi/exec. <a href="https://groups.google.com/forum/?fromgroups=#!topic/redis-db/zVXsg0bjrbg">Pipelining is for batch of Redis commands, multi/exec is good for atomicity</a>.</p> </div> <div id=footer> <p><a href="/">CatCyb.org Logs</a>, themed by <a href="//catcyb.org">CatCyb.org</a>, powered by <a href="//middlemanapp.com/">Middleman</a></p> </div> <script>
+</pre></td></tr></tbody></table> </div> <p>There is another term called pipelining, which is similar to multi/exec. <a href="https://groups.google.com/forum/?fromgroups=#!topic/redis-db/zVXsg0bjrbg">Pipelining is for batch of Redis commands, multi/exec is good for atomicity</a>.</p> </div> <div id=footer> <p><a href="/">CatCyb.org Logs</a>, themed by <a href="//catcyb.org">CatCyb.org</a>, powered by <a href="//middlemanapp.com/">Middleman</a></p> </div> <script>
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-38935144-1']);
       _gaq.push(['_trackPageview']);

@@ -5,23 +5,695 @@
   <id>http://nyan.catcyb.org/</id>
   <link href="http://nyan.catcyb.org/"/>
   <link href="http://nyan.catcyb.org/feed.xml" rel="self"/>
-  <updated>2013-12-04T00:00:00Z</updated>
+  <updated>2014-08-03T08:00:00+08:00</updated>
   <author>
     <name>CatCyborg</name>
   </author>
   <entry>
+    <title>Rolling Your Own Loading Indicator Using Core Animation</title>
+    <link rel="alternate" href="/2014/08/03/rolling-your-own-loading-indicator-using-core-animation/"/>
+    <id>/2014/08/03/rolling-your-own-loading-indicator-using-core-animation/</id>
+    <published>2014-08-03T08:00:00+08:00</published>
+    <updated>2014-08-03T08:00:00+08:00</updated>
+    <author>
+      <name>CatCyborg</name>
+    </author>
+    <summary type="html">&lt;p&gt;If you're bored seeing that default &lt;code&gt;UIActivityIndicator&lt;/code&gt; over and over again, it is time to create your own activity indicator. You might think rolling your own activity indicator is a huge hassle. In reality, a loading indicator is made of combination...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;If you&amp;#39;re bored seeing that default &lt;code&gt;UIActivityIndicator&lt;/code&gt; over and over again, it is time to create your own activity indicator. You might think rolling your own activity indicator is a huge hassle. In reality, a loading indicator is made of combination of shapes being animated. This can be done in your iOS code without animated gif or fancy video!&lt;/p&gt;
+
+&lt;p&gt;Generally, you will need to have some mockups in mind, decompose the shapes and animation, then create the implementation. As an example, we&amp;#39;ll dabble with &lt;code&gt;Core Animation&lt;/code&gt; (pure iOS codes!) to make our loading indicator.&lt;/p&gt;
+
+&lt;h2&gt;Setting Up the Loading Indicator Class&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;How do we decide necessary the abilities of our loading indicator?&lt;/strong&gt; Let&amp;#39;s mimic &lt;code&gt;UIActivityIndicator&lt;/code&gt; class definition to provide the properties and methods needed for our loading indicator.&lt;/p&gt;
+&lt;div class="highlight objective_c"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
+2
+3
+4
+5
+6&lt;/pre&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre&gt;&lt;span class="k"&gt;@interface&lt;/span&gt; &lt;span class="nc"&gt;MyLoadingIndicatorView&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nc"&gt;UIView&lt;/span&gt;
+&lt;span class="k"&gt;@property&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;nonatomic&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;readonly&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;getter&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;isAnimating&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;BOOL&lt;/span&gt; &lt;span class="n"&gt;animating&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;startAnimating&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;stopAnimating&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;@end&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The &lt;code&gt;startAnimating&lt;/code&gt; method initiates infinite animation of the indicator. The &lt;code&gt;stopAnimating&lt;/code&gt; method terminates the infinite animation, preferably using some animation too. The &lt;code&gt;animating&lt;/code&gt; property explains the indicator state whether it is indeed animating.&lt;/p&gt;
+
+&lt;h2&gt;&lt;s&gt;Creating&lt;/s&gt; Copying a Loading Indicator (from QuizUp)&lt;/h2&gt;
+
+&lt;div style="text-align: center; margin-top: 1em;"&gt;
+  &lt;a href="http://cl.ly/2u1O241x2t2c/QULoadingIndicatorView.mov" target="_blank" alt="A Replica of QuizUp Loading Indicator"&gt;
+    &lt;img src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/QULoadingIndicatorView.gif" alt="A Replica of QuizUp Loading Indicator" class="no-border" /&gt;
+  &lt;/a&gt;
+  &lt;p style="font-style: italic; font-size: 0.9em;"&gt;A Replica of QuizUp Loading Indicator&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;When I saw &lt;a href="https://www.quizup.com/en"&gt;QuizUp&lt;/a&gt; for the first time, I found its loading indicator really interesting! The indicator consists of two main &lt;strong&gt;shapes&lt;/strong&gt;: &lt;em&gt;circles&lt;/em&gt; and &lt;em&gt;triangles&lt;/em&gt;. By observing, we can find that...&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;The &lt;em&gt;circles&lt;/em&gt; scale in turns, changing colors based on an array of colors, cycling back when reaching the end of array.&lt;/li&gt;
+&lt;li&gt;The thunder consists of two &lt;em&gt;triangles&lt;/em&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Is everything doable in code? Yes! We can draw the shapes above using &lt;code&gt;CALayer&lt;/code&gt;, and perform the animation using &lt;code&gt;CAAnimation&lt;/code&gt;. Here are overall steps.&lt;/p&gt;
+
+&lt;h3&gt;1. Creating a Container View for Both Shapes&lt;/h3&gt;
+
+&lt;p&gt;&lt;img title="The Container View" alt="The Container View" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/1-the-container-view.png?1407826162" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Constraints for the container view:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Top: 120&lt;/li&gt;
+&lt;li&gt;Width: 100&lt;/li&gt;
+&lt;li&gt;Height: 100&lt;/li&gt;
+&lt;li&gt;Horizontal Center in Container: 0 (Centered Horizontally)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img title="The Container View Constraints" alt="The Container View Constraints" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/1-the-container-view-constraints.png?1407826162" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s call this container view &lt;code&gt;QULoadingIndicatorView&lt;/code&gt;. We need it because of the following reasons.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;For sake of sanity, the animating circles should be grouped together and separated from the thunder.&lt;/li&gt;
+&lt;li&gt;The thunder shape can have different &lt;code&gt;CGRect&lt;/code&gt; size from the circles.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight objective_c"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
+2
+3
+4
+5
+6
+7
+8&lt;/pre&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// QULoadingIndicatorView.h
+&lt;/span&gt;&lt;span class="k"&gt;@interface&lt;/span&gt; &lt;span class="nc"&gt;QULoadingIndicatorView&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nc"&gt;UIView&lt;/span&gt;
+&lt;span class="k"&gt;@property&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;strong&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nonatomic&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;NSArray&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;colors&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;@property&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;nonatomic&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;readonly&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;getter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;isAnimating&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;BOOL&lt;/span&gt; &lt;span class="n"&gt;animating&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;startAnimating&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;stopAnimating&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;@end&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;In the loading indicator implementation file, we will put empty methods for now. These empty methods will forward to our shapes later, once they are ready.&lt;/p&gt;
+&lt;div class="highlight objective_c"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35&lt;/pre&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre&gt;&lt;span class="cp"&gt;#import "QUThunderView.h"
+&lt;/span&gt;
+&lt;span class="k"&gt;@interface&lt;/span&gt; &lt;span class="nc"&gt;QULoadingIndicatorView&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="k"&gt;@end&lt;/span&gt;
+
+&lt;span class="k"&gt;@implementation&lt;/span&gt; &lt;span class="nc"&gt;QULoadingIndicatorView&lt;/span&gt;
+
+&lt;span class="k"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;awakeFromNib&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;super&lt;/span&gt; &lt;span class="nf"&gt;awakeFromNib&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;setColors&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;NSArray&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;colors&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="c1"&gt;// Sets colors of animating circles
+&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;NSArray&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;colors&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="c1"&gt;// Returns colors of animating circles
+&lt;/span&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="p"&gt;[];&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;BOOL&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;isAnimating&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="c1"&gt;// Returns animation status of the animating circles
+&lt;/span&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;NO&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;startAnimating&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="c1"&gt;// Start animating circles and set thunder to be visible
+&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;stopAnimating&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="c1"&gt;// Stop animating circles and set thunder to be invisible
+&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;@end&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h3&gt;2. Animating Circles&lt;/h3&gt;
+
+&lt;p&gt;Let&amp;#39;s prepare a view for the animating circles, &lt;code&gt;QUAlternatingCirclesView&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img title="The Alternating Circles View" alt="The Alternating Circles View" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/2-the-circles.png?1407826163" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Constraints for the alternating circles view (to fill the container):&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Top: 0&lt;/li&gt;
+&lt;li&gt;Left: 0&lt;/li&gt;
+&lt;li&gt;Right: 0&lt;/li&gt;
+&lt;li&gt;Bottom: 0&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img title="The Alternating Circles View Constraints" alt="The Alternating Circles View Constraints" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/2-the-circles-constraints.png?1407826163" /&gt;&lt;/p&gt;
+&lt;div class="highlight objective_c"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
+2
+3
+4
+5
+6
+7&lt;/pre&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre&gt;&lt;span class="k"&gt;@interface&lt;/span&gt; &lt;span class="nc"&gt;QUAlternatingCirclesView&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nc"&gt;UIView&lt;/span&gt;
+&lt;span class="k"&gt;@property&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;strong&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nonatomic&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;NSArray&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;colors&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;@property&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;nonatomic&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;readonly&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;getter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;isAnimating&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;BOOL&lt;/span&gt; &lt;span class="n"&gt;animating&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;startAnimating&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;stopAnimating&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;@end&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;div style="text-align: center; margin-top: 1em;"&gt;
+  &lt;a href="http://cl.ly/2u1O241x2t2c/QULoadingIndicatorView.mov" target="_blank" alt="A Replica of QuizUp Loading Indicator"&gt;
+    &lt;img src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/QULoadingIndicatorView.gif" alt="A Replica of QuizUp Loading Indicator" class="no-border" /&gt;
+  &lt;/a&gt;
+  &lt;p style="font-style: italic; font-size: 0.9em;"&gt;A Replica of QuizUp Loading Indicator&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Let&amp;#39;s observe the animation again. When &lt;code&gt;startAnimating&lt;/code&gt; is invoked, the circles are scaled alternately from 0 to its container size, 100x100. This means we do scale transform from 0 to identity on each of the circles.&lt;/p&gt;
+&lt;div class="highlight objective_c"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20&lt;/pre&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// Circle shape
+&lt;/span&gt;&lt;span class="n"&gt;CALayer&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;layer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;colorLayers&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nf"&gt;colorLayerIndex&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;span class="n"&gt;layer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;backgroundColor&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;colors&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nf"&gt;colorIndex&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="nf"&gt;CGColor&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;span class="n"&gt;layer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;frame&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;layer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bounds&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="n"&gt;layer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;masksToBounds&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;YES&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="n"&gt;layer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cornerRadius&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;layer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;frame&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;width&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="n"&gt;layer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;transform&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;CATransform3DMakeScale&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;layer&lt;/span&gt; &lt;span class="nf"&gt;addSublayer&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;layer&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+
+&lt;span class="c1"&gt;// Scale animation
+&lt;/span&gt;&lt;span class="n"&gt;NSTimeInterval&lt;/span&gt; &lt;span class="n"&gt;duration&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="n"&gt;CABasicAnimation&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;anim&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;CABasicAnimation&lt;/span&gt; &lt;span class="nf"&gt;animationWithKeyPath&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s"&gt;@"transform"&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;span class="n"&gt;anim&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;timingFunction&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;CAMediaTimingFunction&lt;/span&gt; &lt;span class="nf"&gt;functionWithName&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;kCAMediaTimingFunctionEaseOut&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;span class="n"&gt;anim&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fromValue&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;NSValue&lt;/span&gt; &lt;span class="nf"&gt;valueWithCATransform3D&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;CATransform3DMakeScale&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)];&lt;/span&gt;
+&lt;span class="n"&gt;anim&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;toValue&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;NSValue&lt;/span&gt; &lt;span class="nf"&gt;valueWithCATransform3D&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;CATransform3DIdentity&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;span class="n"&gt;anim&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;duration&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;duration&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="n"&gt;anim&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;removedOnCompletion&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;NO&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="n"&gt;anim&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fillMode&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;kCAFillModeForwards&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="n"&gt;anim&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;delegate&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;animatingColorLayer&lt;/span&gt; &lt;span class="nf"&gt;addAnimation&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;anim&lt;/span&gt; &lt;span class="nf"&gt;forKey&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;anim&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;keyPath&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The nagging question that popped to my head was how many &lt;code&gt;CALayer&lt;/code&gt; is needed to make smooth alternating circles. We don&amp;#39;t need layers as many as the colors. Imagine if we want to have 100 colors; having 100 layers is a little bit overkill.&lt;/p&gt;
+
+&lt;p&gt;Now let&amp;#39;s change the question. How many is the least number of layers we need? We know at least there should be at least 2 (it can be 3 or more though), because we see that one acts as the background, and another one is animating.&lt;/p&gt;
+
+&lt;h4&gt;Experiment 1: Two Instances of CALayer (Back and Animating Layers)&lt;/h4&gt;
+
+&lt;p&gt;After the first layer is scaled from 0 to its original size, the second layer should immediately scale from 0 to its original size. After the second layer is scaled, the first one is swapped immediately to be on top of the second one. Unfortunately, during this swapping process, the loading indicator looks &lt;strong&gt;blinking&lt;/strong&gt;. This gives the impression that the animation is not smooth...&lt;/p&gt;
+
+&lt;h4&gt;Experiment 2: Three Instances of CALayer (Back, Animating, and Front Layers)&lt;/h4&gt;
+
+&lt;p&gt;This approach is a superset of the first experiment. In addition to the two layers, we have a third layer behind the second layer.&lt;/p&gt;
+
+&lt;p&gt;We will still have the same mechanism as experiment 1. The difference is, after the first layer is send to back of all layers:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;the second layer acts as the first layer&lt;/li&gt;
+&lt;li&gt;the third layer acts as the second layer&lt;/li&gt;
+&lt;li&gt;the first layer acts as the third layer&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In other words, regardless of the layers&amp;#39; sequence, we always have animating, front, and back color layers.&lt;/p&gt;
+&lt;div class="highlight objective_c"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38&lt;/pre&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre&gt;&lt;span class="k"&gt;@interface&lt;/span&gt; &lt;span class="nc"&gt;QUAlternatingCirclesView&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="k"&gt;@property&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;nonatomic&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;getter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;isAnimating&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;BOOL&lt;/span&gt; &lt;span class="n"&gt;animating&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;@property&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;strong&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nonatomic&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;NSArray&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;colorLayers&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;@property&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;nonatomic&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;NSInteger&lt;/span&gt; &lt;span class="n"&gt;animatingColorLayerIndex&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;@property&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;strong&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nonatomic&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;readonly&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;CALayer&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;backColorLayer&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;@property&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;strong&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nonatomic&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;readonly&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;CALayer&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;animatingColorLayer&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;@property&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;strong&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nonatomic&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;readonly&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;CALayer&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;frontColorLayer&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;@property&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;nonatomic&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;NSInteger&lt;/span&gt; &lt;span class="n"&gt;nextColorIndex&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+
+&lt;span class="k"&gt;@end&lt;/span&gt;
+
+&lt;span class="k"&gt;@implementation&lt;/span&gt; &lt;span class="nc"&gt;QUAlternatingCirclesView&lt;/span&gt;
+
+&lt;span class="k"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;CALayer&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;backColorLayer&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;NSInteger&lt;/span&gt; &lt;span class="n"&gt;backLayerIndex&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;animatingColorLayerIndex&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;backLayerIndex&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;backLayerIndex&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;colorLayers&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;colorLayers&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nf"&gt;backLayerIndex&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;CALayer&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;animatingColorLayer&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;colorLayers&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;animatingColorLayerIndex&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;CALayer&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;frontColorLayer&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;NSInteger&lt;/span&gt; &lt;span class="n"&gt;frontLayerIndex&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;animatingColorLayerIndex&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;colorLayers&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;colorLayers&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nf"&gt;frontLayerIndex&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="c1"&gt;// ...
+&lt;/span&gt;
+&lt;span class="k"&gt;@end&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;We also have to make sure that the colors assigned to those layers are in sequence of colors given by &lt;code&gt;QULoadingIndicatorView&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight objective_c"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92&lt;/pre&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// QUAlternatingCirclesView.m
+&lt;/span&gt;
+&lt;span class="k"&gt;@implementation&lt;/span&gt; &lt;span class="nc"&gt;QUAlternatingCirclesView&lt;/span&gt;
+
+&lt;span class="c1"&gt;// ...
+&lt;/span&gt;
+&lt;span class="k"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;startAnimating&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt; &lt;span class="nf"&gt;prepareLayers&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+
+    &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;animating&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;YES&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt; &lt;span class="nf"&gt;animateFirst&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="c1"&gt;// ...
+&lt;/span&gt;
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;prepareLayers&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;colorLayers&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="n"&gt;CALayer&lt;/span&gt; &lt;span class="nf"&gt;layer&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;CALayer&lt;/span&gt; &lt;span class="nf"&gt;layer&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;CALayer&lt;/span&gt; &lt;span class="nf"&gt;layer&lt;/span&gt;&lt;span class="p"&gt;]];&lt;/span&gt;
+    &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;clipsToBounds&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;YES&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="n"&gt;NSArray&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;colors&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;colors&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;NSInteger&lt;/span&gt; &lt;span class="n"&gt;colorsCount&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;colors&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;NSInteger&lt;/span&gt; &lt;span class="n"&gt;colorIndex&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;NSInteger&lt;/span&gt; &lt;span class="n"&gt;colorLayerIndex&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;colorLayers&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;colorLayerIndex&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;colorLayerIndex&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;CALayer&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;layer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;colorLayers&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nf"&gt;colorLayerIndex&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+        &lt;span class="n"&gt;layer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;backgroundColor&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;colors&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;colorIndex&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="nf"&gt;colorsCount&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="nf"&gt;CGColor&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+        &lt;span class="n"&gt;layer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;frame&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;layer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bounds&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;layer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;masksToBounds&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;YES&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;layer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cornerRadius&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;layer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;frame&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;width&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;layer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;transform&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;CATransform3DMakeScale&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;layer&lt;/span&gt; &lt;span class="nf"&gt;addSublayer&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;layer&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+        &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;colorIndex&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;animateFirst&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;animatingColorLayerIndex&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;nextColorIndex&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt; &lt;span class="nf"&gt;animateColor&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;animateNext&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;CALayer&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;backColorLayer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;backColorLayer&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;backColorLayer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;transform&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;CATransform3DMakeScale&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;layer&lt;/span&gt; &lt;span class="nf"&gt;addSublayer&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;backColorLayer&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+
+    &lt;span class="n"&gt;CALayer&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;frontColorLayer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;frontColorLayer&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;frontColorLayer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;transform&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;CATransform3DMakeScale&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;frontColorLayer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;backgroundColor&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;colors&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;nextColorIndex&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;colors&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;count&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="nf"&gt;CGColor&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+
+    &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;animatingColorLayerIndex&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;animatingColorLayerIndex&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;animatingColorLayerIndex&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;animatingColorLayerIndex&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;colorLayers&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;nextColorIndex&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;nextColorIndex&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;colors&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt; &lt;span class="nf"&gt;animateColor&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;animateColor&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;NSTimeInterval&lt;/span&gt; &lt;span class="n"&gt;duration&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;CABasicAnimation&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;anim&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;CABasicAnimation&lt;/span&gt; &lt;span class="nf"&gt;animationWithKeyPath&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s"&gt;@"transform"&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+    &lt;span class="n"&gt;anim&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;timingFunction&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;CAMediaTimingFunction&lt;/span&gt; &lt;span class="nf"&gt;functionWithName&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;kCAMediaTimingFunctionEaseOut&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+    &lt;span class="n"&gt;anim&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fromValue&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;NSValue&lt;/span&gt; &lt;span class="nf"&gt;valueWithCATransform3D&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;CATransform3DMakeScale&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)];&lt;/span&gt;
+    &lt;span class="n"&gt;anim&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;toValue&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;NSValue&lt;/span&gt; &lt;span class="nf"&gt;valueWithCATransform3D&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;CATransform3DIdentity&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+    &lt;span class="n"&gt;anim&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;duration&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;duration&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;anim&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;removedOnCompletion&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;NO&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;anim&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fillMode&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;kCAFillModeForwards&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;anim&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;delegate&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;animatingColorLayer&lt;/span&gt; &lt;span class="nf"&gt;addAnimation&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;anim&lt;/span&gt; &lt;span class="nf"&gt;forKey&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;anim&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;keyPath&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="cp"&gt;#pragma mark - CAAnimationDelegate
+&lt;/span&gt;
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;animationDidStop&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;CAAnimation&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;anim&lt;/span&gt; &lt;span class="n"&gt;finished&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;BOOL&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;finished&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;finished&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;isAnimating&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt; &lt;span class="nf"&gt;animateNext&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;CALayer&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;colorLayer&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;colorLayers&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+                &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;colorLayer&lt;/span&gt; &lt;span class="nf"&gt;removeFromSuperlayer&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+            &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;@end&lt;/span&gt;
+
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The result of experiment 2 is smoother alternating circles than that of experiment 1.&lt;/p&gt;
+
+&lt;div style="text-align: center; margin-top: 1em;"&gt;
+  &lt;a href="http://cl.ly/2u1O241x2t2c/QULoadingIndicatorView.mov" target="_blank" alt="A Replica of QuizUp Loading Indicator"&gt;
+    &lt;img src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/QULoadingIndicatorView.gif" alt="A Replica of QuizUp Loading Indicator" class="no-border" /&gt;
+  &lt;/a&gt;
+  &lt;p style="font-style: italic; font-size: 0.9em;"&gt;A Replica of QuizUp Loading Indicator&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;h3&gt;3. Making the Thunder Using Triangles&lt;/h3&gt;
+
+&lt;p&gt;Prepare &lt;code&gt;QUThunderLayer&lt;/code&gt; for displaying the thunder.&lt;/p&gt;
+
+&lt;p&gt;&lt;img title="The Thunder View" alt="The Thunder View" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/3-the-thunder.png?1407826163" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Constraints for the alternating thunder view (to make it look okay on top of the circles):&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Top: 20&lt;/li&gt;
+&lt;li&gt;Left: 30&lt;/li&gt;
+&lt;li&gt;Right: 30&lt;/li&gt;
+&lt;li&gt;Bottom: 20&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img title="The Thunder View Constraints" alt="The Thunder View Constraints" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/3-the-thunder-constraints.png?1407826163" /&gt;&lt;/p&gt;
+
+&lt;p&gt;The thunder consist of one triangle on the left and another one on the right. We can use two &lt;code&gt;UIBezierPath&lt;/code&gt; to create the two triangles.&lt;/p&gt;
+&lt;div class="highlight objective_c"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54&lt;/pre&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// QUThunderView.m
+&lt;/span&gt;
+&lt;span class="c1"&gt;// ...
+&lt;/span&gt;
+&lt;span class="k"&gt;@implementation&lt;/span&gt; &lt;span class="nc"&gt;QUThunderLayer&lt;/span&gt;
+
+&lt;span class="c1"&gt;// ...
+&lt;/span&gt;
+&lt;span class="k"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;setupLeftTriangle&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;leftTriangleLayer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;CAShapeLayer&lt;/span&gt; &lt;span class="nf"&gt;layer&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+    &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;leftTriangleLayer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fillColor&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;UIColor&lt;/span&gt; &lt;span class="nf"&gt;whiteColor&lt;/span&gt;&lt;span class="p"&gt;].&lt;/span&gt;&lt;span class="n"&gt;CGColor&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;UIBezierPath&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;triangle&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;UIBezierPath&lt;/span&gt; &lt;span class="nf"&gt;bezierPath&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+
+    &lt;span class="n"&gt;CGFloat&lt;/span&gt; &lt;span class="n"&gt;minX&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;minY&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;CGFloat&lt;/span&gt; &lt;span class="n"&gt;maxX&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;CGRectGetMidX&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bounds&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;CGFloat&lt;/span&gt; &lt;span class="n"&gt;maxY&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;CGRectGetMaxY&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bounds&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;66&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;triangle&lt;/span&gt; &lt;span class="nf"&gt;moveToPoint&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="n"&gt;CGPoint&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;&lt;span class="n"&gt;maxX&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;minY&lt;/span&gt;&lt;span class="p"&gt;}];&lt;/span&gt;
+    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;triangle&lt;/span&gt; &lt;span class="nf"&gt;addLineToPoint&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="n"&gt;CGPoint&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;&lt;span class="n"&gt;maxX&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;maxY&lt;/span&gt;&lt;span class="p"&gt;}];&lt;/span&gt;
+    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;triangle&lt;/span&gt; &lt;span class="nf"&gt;addLineToPoint&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="n"&gt;CGPoint&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;&lt;span class="n"&gt;minX&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;maxY&lt;/span&gt;&lt;span class="p"&gt;}];&lt;/span&gt;
+    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;triangle&lt;/span&gt; &lt;span class="nf"&gt;closePath&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+    &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;leftTriangleLayer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;triangle&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CGPath&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt; &lt;span class="nf"&gt;addSublayer&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;leftTriangleLayer&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;setupRightTriangle&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rightTriangleLayer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;CAShapeLayer&lt;/span&gt; &lt;span class="nf"&gt;layer&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+    &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rightTriangleLayer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fillColor&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;UIColor&lt;/span&gt; &lt;span class="nf"&gt;whiteColor&lt;/span&gt;&lt;span class="p"&gt;].&lt;/span&gt;&lt;span class="n"&gt;CGColor&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="n"&gt;UIBezierPath&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;triangle&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;UIBezierPath&lt;/span&gt; &lt;span class="nf"&gt;bezierPath&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+
+    &lt;span class="n"&gt;CGFloat&lt;/span&gt; &lt;span class="n"&gt;minX&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;CGRectGetMidX&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bounds&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;minY&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;CGRectGetMaxY&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bounds&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;33&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;CGFloat&lt;/span&gt; &lt;span class="n"&gt;maxX&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;CGRectGetMaxX&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bounds&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;CGFloat&lt;/span&gt; &lt;span class="n"&gt;maxY&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;CGRectGetMaxY&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bounds&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;triangle&lt;/span&gt; &lt;span class="nf"&gt;moveToPoint&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="n"&gt;CGPoint&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;&lt;span class="n"&gt;minX&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;minY&lt;/span&gt;&lt;span class="p"&gt;}];&lt;/span&gt;
+    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;triangle&lt;/span&gt; &lt;span class="nf"&gt;addLineToPoint&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="n"&gt;CGPoint&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;&lt;span class="n"&gt;maxX&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;minY&lt;/span&gt;&lt;span class="p"&gt;}];&lt;/span&gt;
+    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;triangle&lt;/span&gt; &lt;span class="nf"&gt;addLineToPoint&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="n"&gt;CGPoint&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;&lt;span class="n"&gt;minX&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;maxY&lt;/span&gt;&lt;span class="p"&gt;}];&lt;/span&gt;
+    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;triangle&lt;/span&gt; &lt;span class="nf"&gt;closePath&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+    &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rightTriangleLayer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;triangle&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CGPath&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt; &lt;span class="nf"&gt;addSublayer&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rightTriangleLayer&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;@end&lt;/span&gt;
+
+
+&lt;span class="k"&gt;@implementation&lt;/span&gt; &lt;span class="nc"&gt;QUThunderView&lt;/span&gt;
+
+&lt;span class="k"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;awakeFromNib&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;super&lt;/span&gt; &lt;span class="nf"&gt;awakeFromNib&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+    &lt;span class="c1"&gt;// Add an instance of QUThunderLayer to this view's layer
+&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;@end&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h2&gt;Full Source Code&lt;/h2&gt;
+
+&lt;p&gt;The rest of the details (like implementation details of &lt;code&gt;stopAnimating&lt;/code&gt; and &lt;code&gt;QULoadingIndicatorView&lt;/code&gt;) are available as full source code in &lt;a href="http://git.io/CyQvSw"&gt;this GitHub repository&lt;/a&gt;. Feel free to run the project to play around with the loading indicator. If you want to use it, copy &lt;code&gt;QULoadingIndicatorView.*&lt;/code&gt;, &lt;code&gt;QUThunderView.*&lt;/code&gt;, and &lt;code&gt;QUAlternatingCirclesView.*&lt;/code&gt; to your project.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
     <title>Ways to Display Tabular Data on iOS</title>
     <link rel="alternate" href="/2013/12/04/ways-to-display-tabular-data-on-ios/"/>
     <id>/2013/12/04/ways-to-display-tabular-data-on-ios/</id>
-    <published>2013-12-04T00:00:00Z</published>
-    <updated>2013-12-04T00:00:00Z</updated>
+    <published>2013-12-04T08:00:00+08:00</published>
+    <updated>2013-12-04T08:00:00+08:00</updated>
     <author>
       <name>CatCyborg</name>
     </author>
     <summary type="html">&lt;p&gt;Recently, I work on an iOS app that helps its users to learn stock trading through simulation. I discovered that numbers, charts and tabular data are the most commonly used on the user interface. &lt;/p&gt;
 
-&lt;p&gt;Well, that looks like quite a retarded discovery I&amp;#39;ve ever made...&lt;em&gt;but probably not really!&lt;/em&gt;&lt;/p&gt;
-</summary>
+&lt;p&gt;Well, that looks like quite a retarded discovery I...&lt;/p&gt;</summary>
     <content type="html">&lt;p&gt;Recently, I work on an iOS app that helps its users to learn stock trading through simulation. I discovered that numbers, charts and tabular data are the most commonly used on the user interface. &lt;/p&gt;
 
 &lt;p&gt;Well, that looks like quite a retarded discovery I&amp;#39;ve ever made...&lt;em&gt;but probably not really!&lt;/em&gt;&lt;/p&gt;
@@ -39,14 +711,22 @@
 &lt;p&gt;How can we code nicely aligned numbers on iOS? How can we make their alignments and values easy to change when we need to?&lt;/p&gt;
 
 &lt;p&gt;For example, we want to display data that looks like the following.&lt;/p&gt;
-&lt;pre class="highlight text"&gt;
+&lt;div class="highlight plaintext"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
+2
+3
+4
+5
+6
+7&lt;/pre&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre&gt;
 
   Stock Symbol: LNKD
   Price Bought: USD 300
  Current Price: USD 300
       Quantity: 10
 
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+
 &lt;p&gt;There are at least three possible approaches to implement this kind of display on iOS.&lt;/p&gt;
 
 &lt;ol&gt;
@@ -57,14 +737,38 @@
 
 &lt;h2&gt;Using Static Labels&lt;/h2&gt;
 
-&lt;p&gt;&lt;img title="Static Labels - Storyboard" alt="Static Labels - Storyboard" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-manual-alignments.png?1406982089" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Static Labels - Storyboard" alt="Static Labels - Storyboard" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-manual-alignments.png?1407826163" /&gt;&lt;/p&gt;
 
 &lt;p&gt;With this approach, number description labels are hardcoded, and number values are bound manually. All labels&amp;#39; coordinates are defined on storyboards/xibs, or perhaps hardcoded on the code.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Static Labels - Storyboard" alt="Static Labels - Storyboard" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-hardcoded-bindings.png?1406982089" /&gt;&lt;/p&gt;
-&lt;pre class="highlight ruby"&gt;&lt;span class="sr"&gt;//&lt;/span&gt; &lt;span class="no"&gt;SLViewController&lt;/span&gt;&lt;span class="nf"&gt;.m&lt;/span&gt;
+&lt;p&gt;&lt;img title="Static Labels - Storyboard" alt="Static Labels - Storyboard" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-hardcoded-bindings.png?1407826162" /&gt;&lt;/p&gt;
+&lt;div class="highlight ruby"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25&lt;/pre&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre&gt;&lt;span class="sr"&gt;//&lt;/span&gt; &lt;span class="no"&gt;SLViewController&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;m&lt;/span&gt;
 
-&lt;span class="c1"&gt;#import &amp;quot;SLViewController.h&amp;quot;&lt;/span&gt;
+&lt;span class="c1"&gt;#import "SLViewController.h"&lt;/span&gt;
 
 &lt;span class="vi"&gt;@interface&lt;/span&gt; &lt;span class="no"&gt;SLViewController&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="vi"&gt;@property&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;weak&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nonatomic&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="no"&gt;IBOutlet&lt;/span&gt; &lt;span class="no"&gt;UILabel&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;symbolLabel&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
@@ -76,19 +780,21 @@
 &lt;span class="vi"&gt;@implementation&lt;/span&gt; &lt;span class="no"&gt;SLViewController&lt;/span&gt;
 
 &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;viewDidLoad&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="k"&gt;super&lt;/span&gt; &lt;span class="n"&gt;viewDidLoad&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="k"&gt;super&lt;/span&gt; &lt;span class="n"&gt;viewDidLoad&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
 
     &lt;span class="sr"&gt;//&lt;/span&gt; &lt;span class="no"&gt;Hardcoded&lt;/span&gt; &lt;span class="nb"&gt;binding&lt;/span&gt;
-    &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.symbolLabel.text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;RKUNF&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.priceBoughtLabel.text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;USD 15.75&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.currentPriceLabel.text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;USD 14.98&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.quantityLabel.text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;100&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;symbolLabel&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"RKUNF"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;priceBoughtLabel&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"USD 15.75"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;currentPriceLabel&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"USD 14.98"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;quantityLabel&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"100"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 
 &lt;span class="vi"&gt;@end&lt;/span&gt;
 
-&lt;/pre&gt;
-&lt;p&gt;&lt;img title="Static Labels - iOS Simulator" alt="Static Labels - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-on-simulator.png?1406982089" /&gt;&lt;/p&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img title="Static Labels - iOS Simulator" alt="Static Labels - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-on-simulator.png?1407826163" /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
 
@@ -110,14 +816,38 @@
 
 &lt;h2&gt;Using Outlet Collections of Labels&lt;/h2&gt;
 
-&lt;p&gt;&lt;img title="Outlet Collections of Labels - Manual Alignments" alt="Outlet Collections of Labels - Manual Alignments" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-manual-alignments.png?1406982089" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Outlet Collections of Labels - Manual Alignments" alt="Outlet Collections of Labels - Manual Alignments" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-manual-alignments.png?1407826163" /&gt;&lt;/p&gt;
 
 &lt;p&gt;With this approach, number description labels are not hardcoded, and number values are bound dynamically. However, all the labels&amp;#39; positions are defined on storyboards/xibs, or perhaps hardcoded on the code. Overall, this is a slightly more dynamic approach than using static labels.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Outlet Collections of Labels - Dynamic Bindings" alt="Outlet Collections of Labels - Dynamic Bindings" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-dynamic-bindings.png?1406982089" /&gt;&lt;/p&gt;
-&lt;pre class="highlight ruby"&gt;&lt;span class="sr"&gt;//&lt;/span&gt; &lt;span class="no"&gt;OCViewController&lt;/span&gt;
+&lt;p&gt;&lt;img title="Outlet Collections of Labels - Dynamic Bindings" alt="Outlet Collections of Labels - Dynamic Bindings" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-dynamic-bindings.png?1407826163" /&gt;&lt;/p&gt;
+&lt;div class="highlight ruby"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25&lt;/pre&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre&gt;&lt;span class="sr"&gt;//&lt;/span&gt; &lt;span class="no"&gt;OCViewController&lt;/span&gt;
 
-&lt;span class="c1"&gt;#import &amp;quot;OCViewController.h&amp;quot;&lt;/span&gt;
+&lt;span class="c1"&gt;#import "OCViewController.h"&lt;/span&gt;
 
 &lt;span class="vi"&gt;@interface&lt;/span&gt; &lt;span class="no"&gt;OCViewController&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="vi"&gt;@property&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;strong&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nonatomic&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="no"&gt;IBOutletCollection&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;UILabel&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="no"&gt;NSArray&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;nameLabels&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
@@ -127,21 +857,23 @@
 &lt;span class="vi"&gt;@implementation&lt;/span&gt; &lt;span class="no"&gt;OCViewController&lt;/span&gt;
 
 &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;viewDidLoad&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="k"&gt;super&lt;/span&gt; &lt;span class="n"&gt;viewDidLoad&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="k"&gt;super&lt;/span&gt; &lt;span class="n"&gt;viewDidLoad&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
 
     &lt;span class="sr"&gt;//&lt;/span&gt; &lt;span class="no"&gt;Names&lt;/span&gt; &lt;span class="n"&gt;and&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt; &lt;span class="n"&gt;are&lt;/span&gt; &lt;span class="n"&gt;easily&lt;/span&gt; &lt;span class="n"&gt;modifiable&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
-    &lt;span class="no"&gt;NSArray&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;names&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Symbol =&amp;gt; &amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Bought =&amp;gt; &amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Current =&amp;gt; &amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Qty =&amp;gt; &amp;quot;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="no"&gt;NSArray&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;LNKD&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;USD 350&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;USD 300&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;80&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;NSInteger&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;names&lt;/span&gt;&lt;span class="nf"&gt;.count&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;UILabel&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.nameLabels&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="n"&gt;setText&lt;/span&gt;&lt;span class="ss"&gt;:names&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;]]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;UILabel&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.valueLabels&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="n"&gt;setText&lt;/span&gt;&lt;span class="ss"&gt;:values&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;]]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="no"&gt;NSArray&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;names&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"Symbol =&amp;gt; "&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"Bought =&amp;gt; "&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"Current =&amp;gt; "&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"Qty =&amp;gt; "&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+    &lt;span class="no"&gt;NSArray&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"LNKD"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"USD 350"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"USD 300"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"80"&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;NSInteger&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;names&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;count&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="no"&gt;UILabel&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;nameLabels&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="n"&gt;setText&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;names&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]];&lt;/span&gt;
+        &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="no"&gt;UILabel&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;valueLabels&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="n"&gt;setText&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]];&lt;/span&gt;
     &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 
 &lt;span class="vi"&gt;@end&lt;/span&gt;
 
-&lt;/pre&gt;
-&lt;p&gt;&lt;img title="Outlet Collections of Labels - iOS Simulator" alt="Outlet Collections of Labels - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-on-simulator.png?1406982089" /&gt;&lt;/p&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img title="Outlet Collections of Labels - iOS Simulator" alt="Outlet Collections of Labels - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-on-simulator.png?1407826163" /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
 
@@ -162,15 +894,69 @@
 
 &lt;h2&gt;Using Table View&lt;/h2&gt;
 
-&lt;p&gt;&lt;img title="Table View" alt="Table View" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view.png?1406982089" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Table View" alt="Table View" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view.png?1407826162" /&gt;&lt;/p&gt;
 
 &lt;p&gt;In this approach, we view each row as a UITableViewCell that has a left label and a right label. The left and right label data are stored in a 2d array of row name and value pairs. This is so far the most flexible way, compare to the other two approaches.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Table View - Dynamic Bindings" alt="Table View - Dynamic Bindings" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-dynamic-bindings.png?1406982089" /&gt;&lt;/p&gt;
-&lt;pre class="highlight ruby"&gt;&lt;span class="sr"&gt;//&lt;/span&gt; &lt;span class="no"&gt;TVViewController&lt;/span&gt;&lt;span class="nf"&gt;.m&lt;/span&gt;
+&lt;p&gt;&lt;img title="Table View - Dynamic Bindings" alt="Table View - Dynamic Bindings" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-dynamic-bindings.png?1407826163" /&gt;&lt;/p&gt;
+&lt;div class="highlight ruby"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55&lt;/pre&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre&gt;&lt;span class="sr"&gt;//&lt;/span&gt; &lt;span class="no"&gt;TVViewController&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;m&lt;/span&gt;
 
-&lt;span class="c1"&gt;#import &amp;quot;TVRowTableViewCell.h&amp;quot;&lt;/span&gt;
-&lt;span class="c1"&gt;#import &amp;quot;TVViewController.h&amp;quot;&lt;/span&gt;
+&lt;span class="c1"&gt;#import "TVRowTableViewCell.h"&lt;/span&gt;
+&lt;span class="c1"&gt;#import "TVViewController.h"&lt;/span&gt;
 
 &lt;span class="vi"&gt;@interface&lt;/span&gt; &lt;span class="no"&gt;TVViewController&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;
     &lt;span class="no"&gt;UITableViewDataSource&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
@@ -182,63 +968,79 @@
 &lt;span class="vi"&gt;@implementation&lt;/span&gt; &lt;span class="no"&gt;TVViewController&lt;/span&gt;
 
 &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;viewDidLoad&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="k"&gt;super&lt;/span&gt; &lt;span class="n"&gt;viewDidLoad&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.tableData&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;
-                       &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;
-                         &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Stock Symbol:&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;LNKD&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                         &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Price Bought:&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;USD 300&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                         &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Current Price:&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;USD 300&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                         &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Quantity:&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;10&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
-                        &lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                       &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;
-                         &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Profit/Loss:&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;0&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                         &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;ROI:&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;0%&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
-                        &lt;span class="o"&gt;]&lt;/span&gt;
-                      &lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="sr"&gt;//&lt;/span&gt; &lt;span class="n"&gt;dummy&lt;/span&gt;
+    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="k"&gt;super&lt;/span&gt; &lt;span class="n"&gt;viewDidLoad&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+    &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;tableData&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;
+                       &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;
+                         &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"Stock Symbol:"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"LNKD"&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+                         &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"Price Bought:"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"USD 300"&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+                         &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"Current Price:"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"USD 300"&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+                         &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"Quantity:"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"10"&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+                        &lt;span class="p"&gt;],&lt;/span&gt;
+                       &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;
+                         &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"Profit/Loss:"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"0"&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+                         &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"ROI:"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"0%"&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+                        &lt;span class="p"&gt;]&lt;/span&gt;
+                      &lt;span class="p"&gt;];&lt;/span&gt; &lt;span class="sr"&gt;//&lt;/span&gt; &lt;span class="n"&gt;dummy&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 
 &lt;span class="c1"&gt;#pragma mark - UITableViewDataSource&lt;/span&gt;
 
 &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;NSInteger&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;numberOfSectionsInTableView&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="no"&gt;UITableView&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;tableView&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.tableData.count&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;tableData&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;count&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 
 &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;NSInteger&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;tableView&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="no"&gt;UITableView&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;tableView&lt;/span&gt; &lt;span class="n"&gt;numberOfRowsInSection&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="no"&gt;NSInteger&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;section&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.tableData&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;section&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;tableData&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;section&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 
 &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;UITableViewCell&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;tableView&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="no"&gt;UITableView&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;tableView&lt;/span&gt; &lt;span class="n"&gt;cellForRowAtIndexPath&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="no"&gt;NSIndexPath&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;indexPath&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="n"&gt;static&lt;/span&gt; &lt;span class="no"&gt;NSString&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;cellIdentifier&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;TVRowTableViewCell&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="no"&gt;TVRowTableViewCell&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;cell&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;tableView&lt;/span&gt; &lt;span class="n"&gt;dequeueReusableCellWithIdentifier&lt;/span&gt;&lt;span class="ss"&gt;:cellIdentifier&lt;/span&gt; &lt;span class="n"&gt;forIndexPath&lt;/span&gt;&lt;span class="ss"&gt;:indexPath&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;cell&lt;/span&gt; &lt;span class="n"&gt;bindRowData&lt;/span&gt;&lt;span class="ss"&gt;:self&lt;/span&gt;&lt;span class="nf"&gt;.tableData&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;indexPath&lt;/span&gt;&lt;span class="nf"&gt;.section&lt;/span&gt;&lt;span class="o"&gt;][&lt;/span&gt;&lt;span class="n"&gt;indexPath&lt;/span&gt;&lt;span class="nf"&gt;.row&lt;/span&gt;&lt;span class="o"&gt;]]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;static&lt;/span&gt; &lt;span class="no"&gt;NSString&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;cellIdentifier&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="s2"&gt;"TVRowTableViewCell"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="no"&gt;TVRowTableViewCell&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;cell&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;tableView&lt;/span&gt; &lt;span class="n"&gt;dequeueReusableCellWithIdentifier&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;cellIdentifier&lt;/span&gt; &lt;span class="n"&gt;forIndexPath&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;indexPath&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;cell&lt;/span&gt; &lt;span class="n"&gt;bindRowData&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;tableData&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;indexPath&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;section&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="n"&gt;indexPath&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;row&lt;/span&gt;&lt;span class="p"&gt;]];&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;cell&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 
 &lt;span class="c1"&gt;#pragma mark - UITableViewDelegate&lt;/span&gt;
 
 &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;UIView&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;tableView&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="no"&gt;UITableView&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;tableView&lt;/span&gt; &lt;span class="n"&gt;viewForFooterInSection&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="no"&gt;NSInteger&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;section&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="o"&gt;[[&lt;/span&gt;&lt;span class="no"&gt;UIView&lt;/span&gt; &lt;span class="n"&gt;alloc&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="n"&gt;initWithFrame&lt;/span&gt;&lt;span class="ss"&gt;:CGRectZero&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="no"&gt;UIView&lt;/span&gt; &lt;span class="n"&gt;alloc&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="n"&gt;initWithFrame&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="no"&gt;CGRectZero&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 
 &lt;span class="vi"&gt;@end&lt;/span&gt;
 
-&lt;/pre&gt;
-&lt;p&gt;&lt;img title="Table View - Row" alt="Table View - Row" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-row.png?1406982089" /&gt;&lt;/p&gt;
-&lt;pre class="highlight ruby"&gt;&lt;span class="sr"&gt;//&lt;/span&gt; &lt;span class="no"&gt;TVRowTableViewCell&lt;/span&gt;&lt;span class="nf"&gt;.m&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
 
-&lt;span class="c1"&gt;#import &amp;quot;TVRowTableViewCell.h&amp;quot;&lt;/span&gt;
+&lt;p&gt;&lt;img title="Table View - Row" alt="Table View - Row" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-row.png?1407826162" /&gt;&lt;/p&gt;
+&lt;div class="highlight ruby"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13&lt;/pre&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre&gt;&lt;span class="sr"&gt;//&lt;/span&gt; &lt;span class="no"&gt;TVRowTableViewCell&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;m&lt;/span&gt;
+
+&lt;span class="c1"&gt;#import "TVRowTableViewCell.h"&lt;/span&gt;
 
 &lt;span class="vi"&gt;@implementation&lt;/span&gt; &lt;span class="no"&gt;TVRowTableViewCell&lt;/span&gt;
 
 &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;bindRowData&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="no"&gt;NSArray&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;rowData&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.leftLabel.text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rowData&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="nf"&gt;.rightLabel.text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rowData&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;leftLabel&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rowData&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+    &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;rightLabel&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rowData&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 
 &lt;span class="vi"&gt;@end&lt;/span&gt;
 
-&lt;/pre&gt;
-&lt;p&gt;&lt;img title="Table View - iOS Simulator" alt="Table View - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-on-simulator.png?1406982089" /&gt;&lt;/p&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img title="Table View - iOS Simulator" alt="Table View - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-on-simulator.png?1407826163" /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
 
@@ -267,8 +1069,8 @@
     <title>4 Tips to Build Fast Websites</title>
     <link rel="alternate" href="/2013/07/09/4-tips-to-build-fast-websites/"/>
     <id>/2013/07/09/4-tips-to-build-fast-websites/</id>
-    <published>2013-07-09T00:00:00Z</published>
-    <updated>2013-07-09T00:00:00Z</updated>
+    <published>2013-07-09T08:00:00+08:00</published>
+    <updated>2013-07-09T08:00:00+08:00</updated>
     <author>
       <name>CatCyborg</name>
     </author>
@@ -277,7 +1079,8 @@
 &lt;p&gt;Take a deep breath.&lt;/p&gt;
 
 &lt;p&gt;I&amp;#39;m gonna explain 4 common tips to help you build fast websites, and show you the tools related. Be happy, most of the tools are free. Sit back and grab some chips!&lt;/p&gt;
-</summary>
+
+&lt;p&gt;</summary>
     <content type="html">&lt;p&gt;Sometimes, you need to build websites for showcasing company information, team details, product information, etc. Once you&amp;#39;ve done your beautiful sites, you wonder why the page loads slowly. There is very little database calls and small amount of back-end web app work.&lt;/p&gt;
 
 &lt;p&gt;Take a deep breath.&lt;/p&gt;
@@ -343,7 +1146,7 @@
 &lt;li&gt;&lt;a href="http://advsys.net/ken/utils.htm"&gt;PNGOUT&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://www.lcdf.org/gifsicle/"&gt;Gifsicle&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://freecode.com/projects/jpegoptim"&gt;JpegOptim&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;...&lt;a href="https://www.google.com.sg/search?q=image+optimization+command+line&amp;oq=image+optimization+command+line&amp;ie=UTF-8"&gt;and many more!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;...&lt;a href="https://www.google.com.sg/search?q=image+optimization+command+line&amp;amp;oq=image+optimization+command+line&amp;amp;ie=UTF-8"&gt;and many more!&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3&gt;Desktop&lt;/h3&gt;
@@ -372,12 +1175,18 @@
 &lt;p&gt;Say, you have the habit of separating Javascript files into different concerns such as model, views, controllers, helpers, widget X, widget Y, etc. Or, you have the habit of separating CSS files for the base layout, sections, widgets, etc. That is great. Keep it up!&lt;/p&gt;
 
 &lt;p&gt;Then, in your HTML views, you reference all those files one by one like this…&lt;/p&gt;
-&lt;pre class="highlight text"&gt;&amp;lt;link href=&amp;quot;style1.css&amp;quot; /&amp;gt;
-&amp;lt;link href=&amp;quot;style2.css&amp;quot; /&amp;gt;
-&amp;lt;link href=&amp;quot;style3.css&amp;quot; /&amp;gt;
-&amp;lt;link href=&amp;quot;style4.css&amp;quot; /&amp;gt;
+&lt;div class="highlight plaintext"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre&gt;&amp;lt;link href="style1.css" /&amp;gt;
+&amp;lt;link href="style2.css" /&amp;gt;
+&amp;lt;link href="style3.css" /&amp;gt;
+&amp;lt;link href="style4.css" /&amp;gt;
 ...
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+
 &lt;p&gt;Imagine if the browser fetches all your Javascript and CSS files one by one...Wait...how many of those files do you have? 10? 20? Whoa, the browser&amp;#39;s gonna create a lot of requests! &lt;strong&gt;One browser can only do 4-6 requests concurrently&lt;/strong&gt;, so please make sure you make use of that limitation effectively.&lt;/p&gt;
 
 &lt;p&gt;It would be great if the browser only need to fetch once for a combined Javascript file, and another one time for a combined CSS file (instead of 10, 20, or a lot). This means, effort to combine those files is necessary. Combining files is as easy as copying and pasting everything to a brand new file. You get what I mean. And of course that&amp;#39;s really tedious to do if you do it by hand for lots of files.&lt;/p&gt;
@@ -474,14 +1283,13 @@
     <title>My Stages of Studying Web Design</title>
     <link rel="alternate" href="/2013/05/09/my-stages-of-studying-web-design/"/>
     <id>/2013/05/09/my-stages-of-studying-web-design/</id>
-    <published>2013-05-09T00:00:00Z</published>
-    <updated>2013-05-09T00:00:00Z</updated>
+    <published>2013-05-09T08:00:00+08:00</published>
+    <updated>2013-05-09T08:00:00+08:00</updated>
     <author>
       <name>CatCyborg</name>
     </author>
-    <summary type="html">&lt;p&gt;This was all started with my desire to &lt;a href="2013-01-30-learning-design.html"&gt;learn design for web/mobile apps&lt;/a&gt; and understand color theory, like color schemes, color meanings, etc. It turned out that I had hard time to remember and apply the theory for the context of making websites. Still, my wonder of how web designers can put together colors and textures gorgeously did not stop. Because of that, I have been trying out colors, textures, spacing, and other things like those for &lt;a href="about.html"&gt;a couple of sites&lt;/a&gt;.&lt;/p&gt;
-</summary>
-    <content type="html">&lt;p&gt;This was all started with my desire to &lt;a href="2013-01-30-learning-design.html"&gt;learn design for web/mobile apps&lt;/a&gt; and understand color theory, like color schemes, color meanings, etc. It turned out that I had hard time to remember and apply the theory for the context of making websites. Still, my wonder of how web designers can put together colors and textures gorgeously did not stop. Because of that, I have been trying out colors, textures, spacing, and other things like those for &lt;a href="about.html"&gt;a couple of sites&lt;/a&gt;.&lt;/p&gt;
+    <summary type="html">&lt;p&gt;This was all started with my desire to &lt;a href="/2013/01/30/learning-design/"&gt;learn design for web/mobile apps&lt;/a&gt; and understand color theory, like color schemes, color meanings, etc. It turned out that I had hard time to remember and apply the theory for the context of making websites. Still...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;This was all started with my desire to &lt;a href="/2013/01/30/learning-design/"&gt;learn design for web/mobile apps&lt;/a&gt; and understand color theory, like color schemes, color meanings, etc. It turned out that I had hard time to remember and apply the theory for the context of making websites. Still, my wonder of how web designers can put together colors and textures gorgeously did not stop. Because of that, I have been trying out colors, textures, spacing, and other things like those for &lt;a href="/about/"&gt;a couple of sites&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;I found out I needed a starting point like everyone else, so that I could continue digging a little bit more. &lt;strong&gt;These were stages of how I dived a bit into designing websites.&lt;/strong&gt;&lt;/p&gt;
 
@@ -529,11 +1337,11 @@
 
 &lt;p&gt;Bored with using solid colors on backgrounds? Try using patterns. I did. It might work. There are free and gorgeous stuff like in &lt;a href="http://subtlepatterns.com/"&gt;Subtle Patterns&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Subtle Patterns" alt="Subtle Patterns" src="/images/subtle-patterns.png?1406982089" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Subtle Patterns" alt="Subtle Patterns" src="/images/subtle-patterns.png?1407826162" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Another choice is to use &lt;a href="http://www.noisetexturegenerator.com/"&gt;Noise Texture Generator&lt;/a&gt; for really small image size. This is useful for replacing your solid color to be slightly different.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Noise Texture Generator" alt="Noise Texture Generator" src="/images/noise-texture-generator.png?1406982089" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Noise Texture Generator" alt="Noise Texture Generator" src="/images/noise-texture-generator.png?1407826163" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Blurred background photos are another option, but I find they are too big and can make web pages slow.&lt;/p&gt;
 
@@ -551,7 +1359,7 @@
 
 &lt;p&gt;&lt;a href="https://developers.google.com/speed/pagespeed/"&gt;Google PageSpeed&lt;/a&gt; is very simple to use. &lt;a href="https://developers.google.com/speed/pagespeed/"&gt;Visit the site&lt;/a&gt;, then follow its suggestions, especially the high priority ones. Once the high priority stuff is solved, page score can be significantly high. It is that simple.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Google PageSpeed" alt="Google PageSpeed" src="/images/pagespeed.png?1406982089" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Google PageSpeed" alt="Google PageSpeed" src="/images/pagespeed.png?1407826162" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Most of the time, I get better score when I use flat design and zero images (no background images, at least). With that, I am going back to trying to understand color theory and typography. Both concepts are enough to make sites looking good with fast speed.&lt;/p&gt;
 
@@ -566,35 +1374,53 @@
     <title>Extending Sets in Redis</title>
     <link rel="alternate" href="/2013/03/15/extending-sets-in-redis/"/>
     <id>/2013/03/15/extending-sets-in-redis/</id>
-    <published>2013-03-15T00:00:00Z</published>
-    <updated>2013-03-15T00:00:00Z</updated>
+    <published>2013-03-15T08:00:00+08:00</published>
+    <updated>2013-03-15T08:00:00+08:00</updated>
     <author>
       <name>CatCyborg</name>
     </author>
     <summary type="html">&lt;p&gt;I seem to encounter some patterns where I need to have Hash data structure in Redis. I sometimes need their values as a list or a set.&lt;/p&gt;
-&lt;pre class="highlight ruby"&gt;&lt;span class="c1"&gt;# ruby&lt;/span&gt;
+&lt;div class="highlight ruby"&gt;
+&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;
+&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="code"&gt;&lt;pre&gt;&lt;span class="c1"&gt;# ruby&lt;/span&gt;
 &lt;span class="nb"&gt;hash&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-  &lt;span class="ss"&gt;cheez: &lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;burger&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-  &lt;span class="ss"&gt;hello: &lt;/span&gt;&lt;span class="no"&gt;Set&lt;/span&gt;&lt;span class="nf"&gt;.new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;yay&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="ss"&gt;cheez: &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'burger'&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+  &lt;span class="ss"&gt;hello: &lt;/span&gt;&lt;span class="no"&gt;Set&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="s1"&gt;'world'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'yay'&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
-&lt;p&gt;Hash in Redis does not support the above structure by default. However, by using Set and another data structure, we can simulate it.&lt;/p&gt;
-</summary>
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Hash in Redis does not support...&lt;/p&gt;</summary>
     <content type="html">&lt;p&gt;I seem to encounter some patterns where I need to have Hash data structure in Redis. I sometimes need their values as a list or a set.&lt;/p&gt;
-&lt;pre class="highlight ruby"&gt;&lt;span class="c1"&gt;# ruby&lt;/span&gt;
+&lt;div class="highlight ruby"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre&gt;&lt;span class="c1"&gt;# ruby&lt;/span&gt;
 &lt;span class="nb"&gt;hash&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-  &lt;span class="ss"&gt;cheez: &lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;burger&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-  &lt;span class="ss"&gt;hello: &lt;/span&gt;&lt;span class="no"&gt;Set&lt;/span&gt;&lt;span class="nf"&gt;.new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;yay&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="ss"&gt;cheez: &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'burger'&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+  &lt;span class="ss"&gt;hello: &lt;/span&gt;&lt;span class="no"&gt;Set&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="s1"&gt;'world'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'yay'&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+
 &lt;p&gt;Hash in Redis does not support the above structure by default. However, by using Set and another data structure, we can simulate it.&lt;/p&gt;
 
 &lt;h2&gt;First Approach&lt;/h2&gt;
 
 &lt;p&gt;First, we are going to implement naive approach like below.&lt;/p&gt;
-&lt;pre class="highlight text"&gt;HSET &amp;quot;hash&amp;quot;, &amp;quot;cheez&amp;quot;, &amp;quot;burger&amp;quot;
-HSET &amp;quot;hash&amp;quot;, &amp;quot;hello&amp;quot;, &amp;quot;world,yay&amp;quot;
-&lt;/pre&gt;
+&lt;div class="highlight plaintext"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
+2&lt;/pre&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre&gt;HSET "hash", "cheez", "burger"
+HSET "hash", "hello", "world,yay"
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+
 &lt;p&gt;Alright, those can solve our problem here but... we need hack for the above structure to work. &lt;/p&gt;
 
 &lt;p&gt;Let&amp;#39;s look at &lt;code&gt;cheez&lt;/code&gt;. Imagine we will have array of values of &lt;code&gt;&amp;quot;cheez&amp;quot;&lt;/code&gt;, then we need long comma-separated values for that. Ok, maybe we can use JSON, but again, it&amp;#39;s another hack just to parse the stored JSON. And those are not including some concurrency issues that might appear someday...&lt;/p&gt;
@@ -604,13 +1430,20 @@ HSET &amp;quot;hash&amp;quot;, &amp;quot;hello&amp;quot;, &amp;quot;world,yay&am
 &lt;h2&gt;An Extensible Approach Using Sets&lt;/h2&gt;
 
 &lt;p&gt;Let&amp;#39;s go back to definition of Hash in Ruby. Hash contains arbitrary key and value pairs, and the keys are unique. In other words, we can represent Hash keys in Ruby as one Set in Redis.&lt;/p&gt;
-&lt;pre class="highlight text"&gt;SADD &amp;quot;hash&amp;quot;, &amp;quot;cheez&amp;quot;
-SADD &amp;quot;hash&amp;quot;, &amp;quot;hello&amp;quot;
+&lt;div class="highlight plaintext"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
+2
+3
+4
+5
+6&lt;/pre&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre&gt;SADD "hash", "cheez"
+SADD "hash", "hello"
 
-RPUSH &amp;quot;hash::cheez&amp;quot;, &amp;quot;burger&amp;quot;
-SADD &amp;quot;hash::hello&amp;quot;, &amp;quot;world&amp;quot;
-SADD &amp;quot;hash::hello&amp;quot;, &amp;quot;yay&amp;quot;
-&lt;/pre&gt;
+RPUSH "hash::cheez", "burger"
+SADD "hash::hello", "world"
+SADD "hash::hello", "yay"
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+
 &lt;p&gt;So, what we did was storing Hash keys in Redis set, then we store the values using another Redis data structure. Not so bad, eh?&lt;/p&gt;
 
 &lt;p&gt;This approach looks complete. Though, sometimes we do need to care a bit about concurrent access and modification, especially when later on you want to change or delete the &lt;code&gt;hash&lt;/code&gt; often.&lt;/p&gt;
@@ -620,24 +1453,41 @@ SADD &amp;quot;hash::hello&amp;quot;, &amp;quot;yay&amp;quot;
 &lt;p&gt;This step is not necessary if your app does not need the above stuff as atomic operation.&lt;/p&gt;
 
 &lt;p&gt;Let&amp;#39;s step back a bit. This is what we want.&lt;/p&gt;
-&lt;pre class="highlight ruby"&gt;&lt;span class="c1"&gt;# ruby&lt;/span&gt;
+&lt;div class="highlight ruby"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre&gt;&lt;span class="c1"&gt;# ruby&lt;/span&gt;
 &lt;span class="nb"&gt;hash&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-  &lt;span class="ss"&gt;cheez: &lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;burger&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-  &lt;span class="ss"&gt;hello: &lt;/span&gt;&lt;span class="no"&gt;Set&lt;/span&gt;&lt;span class="nf"&gt;.new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;yay&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="ss"&gt;cheez: &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'burger'&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+  &lt;span class="ss"&gt;hello: &lt;/span&gt;&lt;span class="no"&gt;Set&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="s1"&gt;'world'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'yay'&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+
 &lt;p&gt;Anytime you set key-value pair to hash, you want it to be (as if) one batch of operation. To make multiple commands work as one unit, use multi/exec.&lt;/p&gt;
-&lt;pre class="highlight text"&gt;MULTI
-SADD &amp;quot;hash&amp;quot;, &amp;quot;cheez&amp;quot;
-LADD &amp;quot;hash::cheez&amp;quot;, &amp;quot;burger&amp;quot;
+&lt;div class="highlight plaintext"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10&lt;/pre&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;pre&gt;MULTI
+SADD "hash", "cheez"
+LADD "hash::cheez", "burger"
 EXEC
 
 MULTI
-SADD &amp;quot;hash&amp;quot;, &amp;quot;hello&amp;quot;
-SADD &amp;quot;hash::hello&amp;quot;, &amp;quot;world&amp;quot;
-SADD &amp;quot;hash::hello&amp;quot;, &amp;quot;yay&amp;quot;
+SADD "hash", "hello"
+SADD "hash::hello", "world"
+SADD "hash::hello", "yay"
 EXEC
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+
 &lt;p&gt;There is another term called pipelining, which is similar to multi/exec. &lt;a href="https://groups.google.com/forum/?fromgroups=#!topic/redis-db/zVXsg0bjrbg"&gt;Pipelining is for batch of Redis commands, multi/exec is good for atomicity&lt;/a&gt;.&lt;/p&gt;
 </content>
   </entry>
@@ -645,17 +1495,16 @@ EXEC
     <title>Playing with PageSpeed</title>
     <link rel="alternate" href="/2013/03/14/playing-with-pagespeed/"/>
     <id>/2013/03/14/playing-with-pagespeed/</id>
-    <published>2013-03-14T00:00:00Z</published>
-    <updated>2013-03-14T00:00:00Z</updated>
+    <published>2013-03-14T08:00:00+08:00</published>
+    <updated>2013-03-14T08:00:00+08:00</updated>
     <author>
       <name>CatCyborg</name>
     </author>
     <summary type="html">&lt;p&gt;How is design related to &lt;a href="https://developers.google.com/speed/pagespeed/"&gt;PageSpeed score&lt;/a&gt;? After playing around with &lt;a href="/about/"&gt;a bunch of side projects I built&lt;/a&gt;, I discovered these 4 things.&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;More images can mean lower PageSpeed score, especially if the images are not optimized. So, if your site has images, be sure that they are optimized.&lt;/li&gt;
-&lt;/ol&gt;
-</summary>
+&lt;li&gt;More images can mean lower PageSpeed score, especially if the images are not optimized. So, if your site has images...&lt;/li&gt;
+&lt;/ol&gt;</summary>
     <content type="html">&lt;p&gt;How is design related to &lt;a href="https://developers.google.com/speed/pagespeed/"&gt;PageSpeed score&lt;/a&gt;? After playing around with &lt;a href="/about/"&gt;a bunch of side projects I built&lt;/a&gt;, I discovered these 4 things.&lt;/p&gt;
 
 &lt;ol&gt;
@@ -666,28 +1515,6 @@ EXEC
 &lt;/ol&gt;
 
 &lt;p&gt;No wonder Gmail page design looks so clean, and it is very performant as well.&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Middleman or Jekyll?</title>
-    <link rel="alternate" href="/2013/03/05/middleman-or-jekyll/"/>
-    <id>/2013/03/05/middleman-or-jekyll/</id>
-    <published>2013-03-05T00:00:00Z</published>
-    <updated>2013-03-05T00:00:00Z</updated>
-    <author>
-      <name>CatCyborg</name>
-    </author>
-    <summary type="html">&lt;p&gt;I have used &lt;a href="https://github.com/mojombo/jekyll"&gt;Jekyll&lt;/a&gt; with &lt;a href="https://github.com/imathis/octopress"&gt;Octopress&lt;/a&gt; before. When I saw &lt;a href="http://middlemanapp.com/"&gt;Middleman&lt;/a&gt;, I immediately fell in love and left Jekyll.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href="https://github.com/mojombo/jekyll"&gt;Jekyll&lt;/a&gt; has awesomely organized folder stucture and has lots of plugins. You can host Jekyll site as it is in GitHub, without any deploy script. It has a few themes you can pick, especially if you use Octopress. However, I like Jekyll better when the documentation has short getting started guide. It took me a while just to make things work initially. I have ever stuck just because I didn&amp;#39;t install Python source code in my computer (I needed syntax highlighting). Also, when I first started using Jekyll, I had to read a lot of information from the documentation or Googling just because of a random problem (either related to syntax highlighting or Liquid).&lt;/p&gt;
-</summary>
-    <content type="html">&lt;p&gt;I have used &lt;a href="https://github.com/mojombo/jekyll"&gt;Jekyll&lt;/a&gt; with &lt;a href="https://github.com/imathis/octopress"&gt;Octopress&lt;/a&gt; before. When I saw &lt;a href="http://middlemanapp.com/"&gt;Middleman&lt;/a&gt;, I immediately fell in love and left Jekyll.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href="https://github.com/mojombo/jekyll"&gt;Jekyll&lt;/a&gt; has awesomely organized folder stucture and has lots of plugins. You can host Jekyll site as it is in GitHub, without any deploy script. It has a few themes you can pick, especially if you use Octopress. However, I like Jekyll better when the documentation has short getting started guide. It took me a while just to make things work initially. I have ever stuck just because I didn&amp;#39;t install Python source code in my computer (I needed syntax highlighting). Also, when I first started using Jekyll, I had to read a lot of information from the documentation or Googling just because of a random problem (either related to syntax highlighting or Liquid).&lt;/p&gt;
-
-&lt;p&gt;&lt;a href="http://middlemanapp.com/"&gt;Middleman&lt;/a&gt; is amazingly lightweight and front-end friendly. The initially generated template is so simple that it works immediately, and anyone can customize it quickly. It comes with &lt;a href="http://middlemanapp.com/asset-pipeline/"&gt;asset pipeline&lt;/a&gt; by default, so it is just a few configs and a command line away to &lt;a href="http://middlemanapp.com/advanced/file-size-optimization/"&gt;minify assets, compress image&lt;/a&gt;, and even &lt;a href="http://middlemanapp.com/minify-html/"&gt;minify HTML&lt;/a&gt;. The documentation is pretty short as well. Unfortunately, Middleman doesn&amp;#39;t have as many plugins as Jekyll. There is no deploy script available by default, and GitHub does not support hosting site organized with Middleman as it is. So, if you want to deploy Middleman-generated site, you need &lt;a href="https://github.com/tvaughan/middleman-deploy"&gt;middleman-deploy&lt;/a&gt;. Also, unfortunately, Middleman&amp;#39;s folder structure can be more disorganized than Jekyll.&lt;/p&gt;
-
-&lt;p&gt;Both &lt;a href="https://github.com/mojombo/jekyll"&gt;Jekyll&lt;/a&gt; and &lt;a href="http://middlemanapp.com/"&gt;Middleman&lt;/a&gt; are really really cool. You should try both and pick what you like.&lt;/p&gt;
 </content>
   </entry>
 </feed>
