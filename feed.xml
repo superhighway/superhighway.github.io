@@ -5,7 +5,7 @@
   <id>http://nyan.catcyb.org/</id>
   <link href="http://nyan.catcyb.org/"/>
   <link href="http://nyan.catcyb.org/feed.xml" rel="self"/>
-  <updated>2014-08-03T08:00:00+08:00</updated>
+  <updated>2014-08-03T07:00:00+07:00</updated>
   <author>
     <name>CatCyborg</name>
   </author>
@@ -13,8 +13,8 @@
     <title>Rolling Your Own Loading Indicator Using Core Animation</title>
     <link rel="alternate" href="/2014/08/03/rolling-your-own-loading-indicator-using-core-animation/"/>
     <id>/2014/08/03/rolling-your-own-loading-indicator-using-core-animation/</id>
-    <published>2014-08-03T08:00:00+08:00</published>
-    <updated>2014-08-03T08:00:00+08:00</updated>
+    <published>2014-08-03T07:00:00+07:00</published>
+    <updated>2014-08-03T07:00:00+07:00</updated>
     <author>
       <name>CatCyborg</name>
     </author>
@@ -62,7 +62,7 @@
 
 &lt;h3&gt;1. Creating a Container View for Both Shapes&lt;/h3&gt;
 
-&lt;p&gt;&lt;img title="The Container View" alt="The Container View" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/1-the-container-view.png?1419010979" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="The Container View" alt="The Container View" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/1-the-container-view.png?1432740914" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Constraints for the container view:&lt;/p&gt;
 
@@ -73,7 +73,7 @@
 &lt;li&gt;Horizontal Center in Container: 0 (Centered Horizontally)&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;img title="The Container View Constraints" alt="The Container View Constraints" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/1-the-container-view-constraints.png?1419010979" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="The Container View Constraints" alt="The Container View Constraints" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/1-the-container-view-constraints.png?1432740914" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Let&amp;#39;s call this container view &lt;code&gt;QULoadingIndicatorView&lt;/code&gt;. We need it because of the following reasons.&lt;/p&gt;
 
@@ -176,7 +176,7 @@
 
 &lt;p&gt;Let&amp;#39;s prepare a view for the animating circles, &lt;code&gt;QUAlternatingCirclesView&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="The Alternating Circles View" alt="The Alternating Circles View" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/2-the-circles.png?1419010979" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="The Alternating Circles View" alt="The Alternating Circles View" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/2-the-circles.png?1432740914" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Constraints for the alternating circles view (to fill the container):&lt;/p&gt;
 
@@ -187,7 +187,7 @@
 &lt;li&gt;Bottom: 0&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;img title="The Alternating Circles View Constraints" alt="The Alternating Circles View Constraints" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/2-the-circles-constraints.png?1419010979" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="The Alternating Circles View Constraints" alt="The Alternating Circles View Constraints" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/2-the-circles-constraints.png?1432740914" /&gt;&lt;/p&gt;
 &lt;div class="highlight objective_c"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
 2
 3
@@ -553,7 +553,7 @@
 
 &lt;p&gt;Prepare &lt;code&gt;QUThunderLayer&lt;/code&gt; for displaying the thunder.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="The Thunder View" alt="The Thunder View" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/3-the-thunder.png?1419010979" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="The Thunder View" alt="The Thunder View" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/3-the-thunder.png?1432740914" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Constraints for the alternating thunder view (to make it look okay on top of the circles):&lt;/p&gt;
 
@@ -564,7 +564,7 @@
 &lt;li&gt;Bottom: 20&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;img title="The Thunder View Constraints" alt="The Thunder View Constraints" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/3-the-thunder-constraints.png?1419010979" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="The Thunder View Constraints" alt="The Thunder View Constraints" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/3-the-thunder-constraints.png?1432740914" /&gt;&lt;/p&gt;
 
 &lt;p&gt;The thunder consist of one triangle on the left and another one on the right. We can use two &lt;code&gt;UIBezierPath&lt;/code&gt; to create the two triangles.&lt;/p&gt;
 &lt;div class="highlight objective_c"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
@@ -686,8 +686,8 @@
     <title>Ways to Display Tabular Data on iOS</title>
     <link rel="alternate" href="/2013/12/04/ways-to-display-tabular-data-on-ios/"/>
     <id>/2013/12/04/ways-to-display-tabular-data-on-ios/</id>
-    <published>2013-12-04T08:00:00+08:00</published>
-    <updated>2013-12-04T08:00:00+08:00</updated>
+    <published>2013-12-04T07:00:00+07:00</published>
+    <updated>2013-12-04T07:00:00+07:00</updated>
     <author>
       <name>CatCyborg</name>
     </author>
@@ -737,11 +737,11 @@
 
 &lt;h2&gt;Using Static Labels&lt;/h2&gt;
 
-&lt;p&gt;&lt;img title="Static Labels - Storyboard" alt="Static Labels - Storyboard" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-manual-alignments.png?1419010979" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Static Labels - Storyboard" alt="Static Labels - Storyboard" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-manual-alignments.png?1432740914" /&gt;&lt;/p&gt;
 
 &lt;p&gt;With this approach, number description labels are hardcoded, and number values are bound manually. All labels&amp;#39; coordinates are defined on storyboards/xibs, or perhaps hardcoded on the code.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Static Labels - Storyboard" alt="Static Labels - Storyboard" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-hardcoded-bindings.png?1419010979" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Static Labels - Storyboard" alt="Static Labels - Storyboard" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-hardcoded-bindings.png?1432740914" /&gt;&lt;/p&gt;
 &lt;div class="highlight ruby"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
 2
 3
@@ -794,7 +794,7 @@
 &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img title="Static Labels - iOS Simulator" alt="Static Labels - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-on-simulator.png?1419010979" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Static Labels - iOS Simulator" alt="Static Labels - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-on-simulator.png?1432740914" /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
 
@@ -816,11 +816,11 @@
 
 &lt;h2&gt;Using Outlet Collections of Labels&lt;/h2&gt;
 
-&lt;p&gt;&lt;img title="Outlet Collections of Labels - Manual Alignments" alt="Outlet Collections of Labels - Manual Alignments" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-manual-alignments.png?1419010979" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Outlet Collections of Labels - Manual Alignments" alt="Outlet Collections of Labels - Manual Alignments" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-manual-alignments.png?1432740914" /&gt;&lt;/p&gt;
 
 &lt;p&gt;With this approach, number description labels are not hardcoded, and number values are bound dynamically. However, all the labels&amp;#39; positions are defined on storyboards/xibs, or perhaps hardcoded on the code. Overall, this is a slightly more dynamic approach than using static labels.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Outlet Collections of Labels - Dynamic Bindings" alt="Outlet Collections of Labels - Dynamic Bindings" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-dynamic-bindings.png?1419010979" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Outlet Collections of Labels - Dynamic Bindings" alt="Outlet Collections of Labels - Dynamic Bindings" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-dynamic-bindings.png?1432740914" /&gt;&lt;/p&gt;
 &lt;div class="highlight ruby"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
 2
 3
@@ -873,7 +873,7 @@
 &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img title="Outlet Collections of Labels - iOS Simulator" alt="Outlet Collections of Labels - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-on-simulator.png?1419010979" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Outlet Collections of Labels - iOS Simulator" alt="Outlet Collections of Labels - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-on-simulator.png?1432740914" /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
 
@@ -894,11 +894,11 @@
 
 &lt;h2&gt;Using Table View&lt;/h2&gt;
 
-&lt;p&gt;&lt;img title="Table View" alt="Table View" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view.png?1419010979" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Table View" alt="Table View" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view.png?1432740914" /&gt;&lt;/p&gt;
 
 &lt;p&gt;In this approach, we view each row as a UITableViewCell that has a left label and a right label. The left and right label data are stored in a 2d array of row name and value pairs. This is so far the most flexible way, compare to the other two approaches.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Table View - Dynamic Bindings" alt="Table View - Dynamic Bindings" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-dynamic-bindings.png?1419010979" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Table View - Dynamic Bindings" alt="Table View - Dynamic Bindings" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-dynamic-bindings.png?1432740914" /&gt;&lt;/p&gt;
 &lt;div class="highlight ruby"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
 2
 3
@@ -1011,7 +1011,7 @@
 &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img title="Table View - Row" alt="Table View - Row" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-row.png?1419010979" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Table View - Row" alt="Table View - Row" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-row.png?1432740914" /&gt;&lt;/p&gt;
 &lt;div class="highlight ruby"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
 2
 3
@@ -1040,7 +1040,7 @@
 &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img title="Table View - iOS Simulator" alt="Table View - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-on-simulator.png?1419010979" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Table View - iOS Simulator" alt="Table View - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-on-simulator.png?1432740914" /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
 
@@ -1069,8 +1069,8 @@
     <title>4 Tips to Build Fast Websites</title>
     <link rel="alternate" href="/2013/07/09/4-tips-to-build-fast-websites/"/>
     <id>/2013/07/09/4-tips-to-build-fast-websites/</id>
-    <published>2013-07-09T08:00:00+08:00</published>
-    <updated>2013-07-09T08:00:00+08:00</updated>
+    <published>2013-07-09T07:00:00+07:00</published>
+    <updated>2013-07-09T07:00:00+07:00</updated>
     <author>
       <name>CatCyborg</name>
     </author>
@@ -1283,8 +1283,8 @@
     <title>My Stages of Studying Web Design</title>
     <link rel="alternate" href="/2013/05/09/my-stages-of-studying-web-design/"/>
     <id>/2013/05/09/my-stages-of-studying-web-design/</id>
-    <published>2013-05-09T08:00:00+08:00</published>
-    <updated>2013-05-09T08:00:00+08:00</updated>
+    <published>2013-05-09T07:00:00+07:00</published>
+    <updated>2013-05-09T07:00:00+07:00</updated>
     <author>
       <name>CatCyborg</name>
     </author>
@@ -1337,11 +1337,11 @@
 
 &lt;p&gt;Bored with using solid colors on backgrounds? Try using patterns. I did. It might work. There are free and gorgeous stuff like in &lt;a href="http://subtlepatterns.com/"&gt;Subtle Patterns&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Subtle Patterns" alt="Subtle Patterns" src="/images/subtle-patterns.png?1419010979" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Subtle Patterns" alt="Subtle Patterns" src="/images/subtle-patterns.png?1432740914" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Another choice is to use &lt;a href="http://www.noisetexturegenerator.com/"&gt;Noise Texture Generator&lt;/a&gt; for really small image size. This is useful for replacing your solid color to be slightly different.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Noise Texture Generator" alt="Noise Texture Generator" src="/images/noise-texture-generator.png?1419010979" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Noise Texture Generator" alt="Noise Texture Generator" src="/images/noise-texture-generator.png?1432740914" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Blurred background photos are another option, but I find they are too big and can make web pages slow.&lt;/p&gt;
 
@@ -1359,7 +1359,7 @@
 
 &lt;p&gt;&lt;a href="https://developers.google.com/speed/pagespeed/"&gt;Google PageSpeed&lt;/a&gt; is very simple to use. &lt;a href="https://developers.google.com/speed/pagespeed/"&gt;Visit the site&lt;/a&gt;, then follow its suggestions, especially the high priority ones. Once the high priority stuff is solved, page score can be significantly high. It is that simple.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Google PageSpeed" alt="Google PageSpeed" src="/images/pagespeed.png?1419010979" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Google PageSpeed" alt="Google PageSpeed" src="/images/pagespeed.png?1432740914" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Most of the time, I get better score when I use flat design and zero images (no background images, at least). With that, I am going back to trying to understand color theory and typography. Both concepts are enough to make sites looking good with fast speed.&lt;/p&gt;
 
@@ -1367,15 +1367,15 @@
 
 &lt;p&gt;The above are all my stages of studying web design until now. At least, it&amp;#39;s something!&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="It's something!" alt="It's something!" src="/images/something.jpg?1419010979" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="It's something!" alt="It's something!" src="/images/something.jpg?1432740914" /&gt;&lt;/p&gt;
 </content>
   </entry>
   <entry>
     <title>Extending Sets in Redis</title>
     <link rel="alternate" href="/2013/03/15/extending-sets-in-redis/"/>
     <id>/2013/03/15/extending-sets-in-redis/</id>
-    <published>2013-03-15T08:00:00+08:00</published>
-    <updated>2013-03-15T08:00:00+08:00</updated>
+    <published>2013-03-15T07:00:00+07:00</published>
+    <updated>2013-03-15T07:00:00+07:00</updated>
     <author>
       <name>CatCyborg</name>
     </author>
@@ -1495,8 +1495,8 @@ EXEC
     <title>Playing with PageSpeed</title>
     <link rel="alternate" href="/2013/03/14/playing-with-pagespeed/"/>
     <id>/2013/03/14/playing-with-pagespeed/</id>
-    <published>2013-03-14T08:00:00+08:00</published>
-    <updated>2013-03-14T08:00:00+08:00</updated>
+    <published>2013-03-14T07:00:00+07:00</published>
+    <updated>2013-03-14T07:00:00+07:00</updated>
     <author>
       <name>CatCyborg</name>
     </author>
