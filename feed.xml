@@ -5,49 +5,10 @@
   <id>http://nyan.catcyb.org/</id>
   <link href="http://nyan.catcyb.org/"/>
   <link href="http://nyan.catcyb.org/feed.xml" rel="self"/>
-  <updated>2015-01-08T07:00:00+07:00</updated>
+  <updated>2014-08-03T07:00:00+07:00</updated>
   <author>
     <name>CatCyborg</name>
   </author>
-  <entry>
-    <title>Statistically Speaking, I am Weird</title>
-    <link rel="alternate" href="/2015/01/08/statistically-speaking-i-am-weird/"/>
-    <id>/2015/01/08/statistically-speaking-i-am-weird/</id>
-    <published>2015-01-08T07:00:00+07:00</published>
-    <updated>2015-01-08T07:00:00+07:00</updated>
-    <author>
-      <name>CatCyborg</name>
-    </author>
-    <summary type="html">&lt;p&gt;Warning: I am not a statician. This is my own opinion about myself. Feel free to leave this page now. Yes. Now.&lt;/p&gt;
-
-&lt;p&gt;Right now.&lt;/p&gt;
-
-&lt;p&gt;Bye. Good for you.&lt;/p&gt;
-
-&lt;p&gt;I took personality tests and found out I mostly got different thing depending on what I am doing. Now I...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;Warning: I am not a statician. This is my own opinion about myself. Feel free to leave this page now. Yes. Now.&lt;/p&gt;
-
-&lt;p&gt;Right now.&lt;/p&gt;
-
-&lt;p&gt;Bye. Good for you.&lt;/p&gt;
-
-&lt;p&gt;I took personality tests and found out I mostly got different thing depending on what I am doing. Now I start to conclude that they&amp;#39;re just tests to check which one I&amp;#39;m actually comfortable with.&lt;/p&gt;
-
-&lt;p&gt;Got INTP, ISFP, INFP... mostly maybe INFP? But being that is actually a little secluded, especially when working as programmer. According to some statistics, INFP is underrepresented in programer, making it really question my existence along the run.&lt;/p&gt;
-
-&lt;p&gt;Took multiple intelligence tests, etc. Still getting different results.&lt;/p&gt;
-
-&lt;p&gt;It seems like I can be anything. But then it&amp;#39;s not right because I&amp;#39;m merely a human.&lt;/p&gt;
-
-&lt;p&gt;If I view programming as tool to finish tasks, definitely I&amp;#39;d feel really sad and bored everyday. If I view programming as a medium, it&amp;#39;s a little liberating. A medium to express emotions, questions or statements, for example. To express excitement, maybe more colors, exclamation mark, verbs, capitalization, bang sudden sounds, etc. Some programming languages are easy to express something than something else.&lt;/p&gt;
-
-&lt;p&gt;It&amp;#39;s really hard to judge. Once judged, it&amp;#39;s probably wrong in certain contexts. If it&amp;#39;s right, maybe because the wrong part isn&amp;#39;t being highlighted.&lt;/p&gt;
-
-&lt;p&gt;Definitely I&amp;#39;m not the best programmer in the world, but statistically speaking, I&amp;#39;m weird. Or rather I should be doing something else.&lt;/p&gt;
-
-&lt;p&gt;Update: I went to consult somebody and he said I am being way too critical for too many cases, even for simple things. And yes I need to learn lots of things how to be a little bit more normal.&lt;/p&gt;
-</content>
-  </entry>
   <entry>
     <title>Rolling Your Own Loading Indicator Using Core Animation</title>
     <link rel="alternate" href="/2014/08/03/rolling-your-own-loading-indicator-using-core-animation/"/>
@@ -101,7 +62,7 @@
 
 &lt;h3&gt;1. Creating a Container View for Both Shapes&lt;/h3&gt;
 
-&lt;p&gt;&lt;img title="The Container View" alt="The Container View" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/1-the-container-view.png?1433030694" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="The Container View" alt="The Container View" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/1-the-container-view.png?1433645361" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Constraints for the container view:&lt;/p&gt;
 
@@ -112,7 +73,7 @@
 &lt;li&gt;Horizontal Center in Container: 0 (Centered Horizontally)&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;img title="The Container View Constraints" alt="The Container View Constraints" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/1-the-container-view-constraints.png?1433030694" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="The Container View Constraints" alt="The Container View Constraints" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/1-the-container-view-constraints.png?1433645361" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Let&amp;#39;s call this container view &lt;code&gt;QULoadingIndicatorView&lt;/code&gt;. We need it because of the following reasons.&lt;/p&gt;
 
@@ -215,7 +176,7 @@
 
 &lt;p&gt;Let&amp;#39;s prepare a view for the animating circles, &lt;code&gt;QUAlternatingCirclesView&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="The Alternating Circles View" alt="The Alternating Circles View" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/2-the-circles.png?1433030694" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="The Alternating Circles View" alt="The Alternating Circles View" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/2-the-circles.png?1433645361" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Constraints for the alternating circles view (to fill the container):&lt;/p&gt;
 
@@ -226,7 +187,7 @@
 &lt;li&gt;Bottom: 0&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;img title="The Alternating Circles View Constraints" alt="The Alternating Circles View Constraints" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/2-the-circles-constraints.png?1433030694" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="The Alternating Circles View Constraints" alt="The Alternating Circles View Constraints" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/2-the-circles-constraints.png?1433645361" /&gt;&lt;/p&gt;
 &lt;div class="highlight objective_c"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
 2
 3
@@ -592,7 +553,7 @@
 
 &lt;p&gt;Prepare &lt;code&gt;QUThunderLayer&lt;/code&gt; for displaying the thunder.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="The Thunder View" alt="The Thunder View" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/3-the-thunder.png?1433030694" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="The Thunder View" alt="The Thunder View" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/3-the-thunder.png?1433645361" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Constraints for the alternating thunder view (to make it look okay on top of the circles):&lt;/p&gt;
 
@@ -603,7 +564,7 @@
 &lt;li&gt;Bottom: 20&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;img title="The Thunder View Constraints" alt="The Thunder View Constraints" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/3-the-thunder-constraints.png?1433030694" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="The Thunder View Constraints" alt="The Thunder View Constraints" src="/images/2014-08-03-rolling-your-own-loading-indicator-using-core-animation/3-the-thunder-constraints.png?1433645361" /&gt;&lt;/p&gt;
 
 &lt;p&gt;The thunder consist of one triangle on the left and another one on the right. We can use two &lt;code&gt;UIBezierPath&lt;/code&gt; to create the two triangles.&lt;/p&gt;
 &lt;div class="highlight objective_c"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
@@ -776,11 +737,11 @@
 
 &lt;h2&gt;Using Static Labels&lt;/h2&gt;
 
-&lt;p&gt;&lt;img title="Static Labels - Storyboard" alt="Static Labels - Storyboard" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-manual-alignments.png?1433030694" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Static Labels - Storyboard" alt="Static Labels - Storyboard" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-manual-alignments.png?1433645361" /&gt;&lt;/p&gt;
 
 &lt;p&gt;With this approach, number description labels are hardcoded, and number values are bound manually. All labels&amp;#39; coordinates are defined on storyboards/xibs, or perhaps hardcoded on the code.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Static Labels - Storyboard" alt="Static Labels - Storyboard" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-hardcoded-bindings.png?1433030694" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Static Labels - Storyboard" alt="Static Labels - Storyboard" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-hardcoded-bindings.png?1433645361" /&gt;&lt;/p&gt;
 &lt;div class="highlight ruby"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
 2
 3
@@ -833,7 +794,7 @@
 &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img title="Static Labels - iOS Simulator" alt="Static Labels - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-on-simulator.png?1433030694" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Static Labels - iOS Simulator" alt="Static Labels - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/static-labels-on-simulator.png?1433645361" /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
 
@@ -855,11 +816,11 @@
 
 &lt;h2&gt;Using Outlet Collections of Labels&lt;/h2&gt;
 
-&lt;p&gt;&lt;img title="Outlet Collections of Labels - Manual Alignments" alt="Outlet Collections of Labels - Manual Alignments" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-manual-alignments.png?1433030694" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Outlet Collections of Labels - Manual Alignments" alt="Outlet Collections of Labels - Manual Alignments" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-manual-alignments.png?1433645361" /&gt;&lt;/p&gt;
 
 &lt;p&gt;With this approach, number description labels are not hardcoded, and number values are bound dynamically. However, all the labels&amp;#39; positions are defined on storyboards/xibs, or perhaps hardcoded on the code. Overall, this is a slightly more dynamic approach than using static labels.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Outlet Collections of Labels - Dynamic Bindings" alt="Outlet Collections of Labels - Dynamic Bindings" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-dynamic-bindings.png?1433030694" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Outlet Collections of Labels - Dynamic Bindings" alt="Outlet Collections of Labels - Dynamic Bindings" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-dynamic-bindings.png?1433645361" /&gt;&lt;/p&gt;
 &lt;div class="highlight ruby"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
 2
 3
@@ -912,7 +873,7 @@
 &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img title="Outlet Collections of Labels - iOS Simulator" alt="Outlet Collections of Labels - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-on-simulator.png?1433030694" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Outlet Collections of Labels - iOS Simulator" alt="Outlet Collections of Labels - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/outlet-collections-of-labels-on-simulator.png?1433645361" /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
 
@@ -933,11 +894,11 @@
 
 &lt;h2&gt;Using Table View&lt;/h2&gt;
 
-&lt;p&gt;&lt;img title="Table View" alt="Table View" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view.png?1433030694" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Table View" alt="Table View" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view.png?1433645361" /&gt;&lt;/p&gt;
 
 &lt;p&gt;In this approach, we view each row as a UITableViewCell that has a left label and a right label. The left and right label data are stored in a 2d array of row name and value pairs. This is so far the most flexible way, compare to the other two approaches.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Table View - Dynamic Bindings" alt="Table View - Dynamic Bindings" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-dynamic-bindings.png?1433030694" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Table View - Dynamic Bindings" alt="Table View - Dynamic Bindings" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-dynamic-bindings.png?1433645361" /&gt;&lt;/p&gt;
 &lt;div class="highlight ruby"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
 2
 3
@@ -1050,7 +1011,7 @@
 &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img title="Table View - Row" alt="Table View - Row" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-row.png?1433030694" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Table View - Row" alt="Table View - Row" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-row.png?1433645361" /&gt;&lt;/p&gt;
 &lt;div class="highlight ruby"&gt;&lt;table style="border-spacing: 0"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class="gutter gl" style="text-align: right"&gt;&lt;pre class="lineno"&gt;1
 2
 3
@@ -1079,7 +1040,7 @@
 &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img title="Table View - iOS Simulator" alt="Table View - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-on-simulator.png?1433030694" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Table View - iOS Simulator" alt="Table View - iOS Simulator" src="/images/2013-12-04-ways-to-display-tabular-data-on-ios/table-view-on-simulator.png?1433645361" /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Pros:&lt;/strong&gt;&lt;/p&gt;
 
@@ -1376,11 +1337,11 @@
 
 &lt;p&gt;Bored with using solid colors on backgrounds? Try using patterns. I did. It might work. There are free and gorgeous stuff like in &lt;a href="http://subtlepatterns.com/"&gt;Subtle Patterns&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Subtle Patterns" alt="Subtle Patterns" src="/images/subtle-patterns.png?1433030694" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Subtle Patterns" alt="Subtle Patterns" src="/images/subtle-patterns.png?1433645361" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Another choice is to use &lt;a href="http://www.noisetexturegenerator.com/"&gt;Noise Texture Generator&lt;/a&gt; for really small image size. This is useful for replacing your solid color to be slightly different.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Noise Texture Generator" alt="Noise Texture Generator" src="/images/noise-texture-generator.png?1433030694" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Noise Texture Generator" alt="Noise Texture Generator" src="/images/noise-texture-generator.png?1433645361" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Blurred background photos are another option, but I find they are too big and can make web pages slow.&lt;/p&gt;
 
@@ -1398,7 +1359,7 @@
 
 &lt;p&gt;&lt;a href="https://developers.google.com/speed/pagespeed/"&gt;Google PageSpeed&lt;/a&gt; is very simple to use. &lt;a href="https://developers.google.com/speed/pagespeed/"&gt;Visit the site&lt;/a&gt;, then follow its suggestions, especially the high priority ones. Once the high priority stuff is solved, page score can be significantly high. It is that simple.&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="Google PageSpeed" alt="Google PageSpeed" src="/images/pagespeed.png?1433030694" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="Google PageSpeed" alt="Google PageSpeed" src="/images/pagespeed.png?1433645361" /&gt;&lt;/p&gt;
 
 &lt;p&gt;Most of the time, I get better score when I use flat design and zero images (no background images, at least). With that, I am going back to trying to understand color theory and typography. Both concepts are enough to make sites looking good with fast speed.&lt;/p&gt;
 
@@ -1406,7 +1367,7 @@
 
 &lt;p&gt;The above are all my stages of studying web design until now. At least, it&amp;#39;s something!&lt;/p&gt;
 
-&lt;p&gt;&lt;img title="It's something!" alt="It's something!" src="/images/something.jpg?1433030694" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img title="It's something!" alt="It's something!" src="/images/something.jpg?1433645361" /&gt;&lt;/p&gt;
 </content>
   </entry>
   <entry>
@@ -1528,6 +1489,32 @@ EXEC
 &lt;/div&gt;
 
 &lt;p&gt;There is another term called pipelining, which is similar to multi/exec. &lt;a href="https://groups.google.com/forum/?fromgroups=#!topic/redis-db/zVXsg0bjrbg"&gt;Pipelining is for batch of Redis commands, multi/exec is good for atomicity&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Playing with PageSpeed</title>
+    <link rel="alternate" href="/2013/03/14/playing-with-pagespeed/"/>
+    <id>/2013/03/14/playing-with-pagespeed/</id>
+    <published>2013-03-14T07:00:00+07:00</published>
+    <updated>2013-03-14T07:00:00+07:00</updated>
+    <author>
+      <name>CatCyborg</name>
+    </author>
+    <summary type="html">&lt;p&gt;How is design related to &lt;a href="https://developers.google.com/speed/pagespeed/"&gt;PageSpeed score&lt;/a&gt;? After playing around with &lt;a href="/about.html"&gt;a bunch of side projects I built&lt;/a&gt;, I discovered these 4 things.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;More images can mean lower PageSpeed score, especially if the images are not optimized. So, if your site has images...&lt;/li&gt;
+&lt;/ol&gt;</summary>
+    <content type="html">&lt;p&gt;How is design related to &lt;a href="https://developers.google.com/speed/pagespeed/"&gt;PageSpeed score&lt;/a&gt;? After playing around with &lt;a href="/about.html"&gt;a bunch of side projects I built&lt;/a&gt;, I discovered these 4 things.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;More images can mean lower PageSpeed score, especially if the images are not optimized. So, if your site has images, be sure that they are optimized.&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://fltdsgn.com/"&gt;Flat design&lt;/a&gt; uses color combination, but very few texture background, gradients, and other kinds of images. This can lead to high score. Of course, if images are used, number 1 above has to be fulfilled.&lt;/li&gt;
+&lt;li&gt;Although you use CDN for your Javascript or CSS, the score will be a lot lower if they&amp;#39;re not gzipped.&lt;br/&gt;I had 200kb scripts hosted on somebody else&amp;#39;s CDN. Then, I gzipped it and hosted those on GitHub. The final size became 20-30kb, but I thought DNS lookup could be a lot slower. Anyway, just by gzipping those scripts, Google PageSpeed gave my site score higher by 30.&lt;/li&gt;
+&lt;li&gt;Look at &amp;quot;Critical Path Explorer&amp;quot; to check how and how long your site assets are downloaded. Though your score is so-so, maybe your site is actually quite decent.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;No wonder Gmail page design looks so clean, and it is very performant as well.&lt;/p&gt;
 </content>
   </entry>
 </feed>
