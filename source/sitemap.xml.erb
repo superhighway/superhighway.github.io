@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>http://nyan.catcyb.org/</loc>
+    <priority>0.7</priority>
+    <lastmod><%= Date.today.to_time.iso8601 %></lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+<% blog.articles.each do |article| %>
+  <url>
+    <loc><%= article.url %></loc>
+    <priority>0.7</priority>
+    <lastmod><%= article.date.to_time.iso8601 %></lastmod>
+    <changefreq>weekly</changefreq>
+  </url>
+<% end %>
+</urlset>

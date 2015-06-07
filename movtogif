@@ -1,0 +1,1 @@
+ffmpeg -i in.mov -s 208x208 -pix_fmt rgb24 -r 25 -f gif - | gifsicle --optimize=3 --loop --delay=3 > out.gif

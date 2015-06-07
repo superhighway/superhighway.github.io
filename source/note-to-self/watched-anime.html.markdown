@@ -1,0 +1,39 @@
+# Watched Anime
+
+- Hetalia
+- Ichigo 100%
+- Onegai Teacher
+- Onegai Twins
+- Haibane Renmei
+- Serial Experiments Lain
+- Hellsing
+- Wolf's Rain
+- Gintama
+- Keion
+	- Season 1
+	- Season 2
+	- OVA
+- School Rumble
+	- Season 1
+	- Season 2
+	- OVA
+- Ichigo Mashimaro
+	- Season 1
+	- OVA 1
+	- OVA 2 (Encore!)
+- Penguin Musume Heart
+- Full Metal Panic
+	- Season 1
+	- Season 2
+- Full Metal Alchemist
+- Bakemonogatari
+	- The Anime (Duh…)
+	- Nisemonogatari
+- Shinryaku!? Ika Musume
+	- Season 1
+	- Season 2
+	- OVA
+- Kore wa Zombie Desuka
+	- Season 1
+	- Season 2
+
